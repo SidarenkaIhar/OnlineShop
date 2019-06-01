@@ -3,6 +3,7 @@ package com.epam.training.onlineshop.servlets;
 import com.epam.training.onlineshop.dao.DAOFactory;
 import com.epam.training.onlineshop.dao.UserDAO;
 import com.epam.training.onlineshop.entity.user.User;
+import com.epam.training.onlineshop.utils.Validator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,19 +14,22 @@ import java.io.IOException;
 
 import static com.epam.training.onlineshop.dao.StatementType.*;
 import static com.epam.training.onlineshop.users.UserGroup.getGroupById;
-import static com.epam.training.onlineshop.utils.Validator.getInstance;
 
 /**
+ * Servlet responsible for adding a new user to the store or editing an existing one
+ *
  * @author Ihar Sidarenka
  * @version 0.1 26-May-19
  */
 @WebServlet(name = "EditUserServlet", urlPatterns = "/edituser")
 public class EditUserServlet extends HttpServlet {
     private UserDAO userDAO;
+    private Validator validator;
 
     public void init() {
         DAOFactory mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
         userDAO = mysqlFactory.getUserDAO();
+        validator = new Validator();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -76,7 +80,7 @@ public class EditUserServlet extends HttpServlet {
         } else if (statementType.equalsIgnoreCase(UPDATE.name())) {
             request.setAttribute("editedUser", "Edit user №" + userId);
             request.setAttribute("val_statement_type", UPDATE.toString());
-            boolean isCorrect = getInstance().validateUserData(userName, password, email) && password.equals(confirm);
+            boolean isCorrect = validator.validateUserData(userName, password, email) && password.equals(confirm);
             if (isCorrect) {
                 User user = new User(userId, getGroupById(userGroup), userName, password, email, status);
                 boolean isSuccessfully = userDAO.update(user);
@@ -91,7 +95,7 @@ public class EditUserServlet extends HttpServlet {
             }
         } else {
             request.setAttribute("editedUser", "Add new user");
-            boolean isCorrect = getInstance().validateUserData(userName, password, email) && password.equals(confirm);
+            boolean isCorrect = validator.validateUserData(userName, password, email) && password.equals(confirm);
             if (isCorrect) {
                 User user = new User(getGroupById(userGroup), userName, password, email, status);
                 boolean isSuccessfully = userDAO.addNew(user);

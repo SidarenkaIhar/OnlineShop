@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * The servlet is responsible for displaying and removing users store
+ *
  * @author Ihar Sidarenka
  * @version 0.1 25-May-19
  */
