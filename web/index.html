@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>List of users</title>
+    <script src="/js/common.js"></script>
+    <link rel="stylesheet" href="/css/stylesheet.css" type="text/css">
+    <link rel="stylesheet" href="/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css">
+</head>
+<body onload="postServletJSON('/homeServlet')">
+<div id="container">
+    <div id="content">
+        <div class="page-header">
+            <div class="container-fluid">
+                <div class="pull-right">
+                    <a href="/" data-toggle="tooltip" title="Home" class="btn btn-primary"><i class="fa fa-home"></i></a>
+                    <a href="/edituser.html" data-toggle="tooltip" title="Add new user" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                    <button type="button" data-toggle="tooltip" title="Remove selected users" class="btn btn-danger"
+                            onclick="confirm('Do you really want to delete the selected users?') ? deleteUsers() : false;"><i class="fa fa-trash-o"></i></button>
+                </div>
+                <h1>List of users of the online shop</h1>
+            </div>
+        </div>
+        <div id="messageFailed" class="alert alert-danger alert-dismissible" style="display: none"><i class="fa fa-exclamation-circle"></i>
+            <div id="messageFailedText" style="display: inline-block"></div>
+            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageFailed')">&times;</button>
+        </div>
+        <div id="messageSuccess" class="alert alert-success alert-dismissible" style="display: none"><i class="fa fa-check-circle"></i>
+            <div id="messageSuccessText" style="display: inline-block"></div>
+            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageSuccess')">&times;</button>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-list"></i>Editable users</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <form action="/" method="post" id="form-deleteuser">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <td class="text-center"> Select</td>
+                                <td class="text-left"> User id</td>
+                                <td class="text-left"> User group</td>
+                                <td class="text-left"> User name</td>
+                                <td class="text-left"> Password</td>
+                                <td class="text-left"> Email</td>
+                                <td class="text-left"> Is active</td>
+                                <td class="text-left"> Date added</td>
+                                <td class="text-center"> Action</td>
+                            </tr>
+                            </thead>
+                            <tbody id="allUsersList">
+                            <tr>
+                                <td class="text-center" colspan="9">Users not found in the database.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                    <form action="/edituser.html" method="get" id="form-edituser">
+                        <input type="hidden" name="typeOperation" id="user_typeOperation" value="SELECT">
+                        <input type="hidden" name="usersToEdit" id="user_id" value="">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
