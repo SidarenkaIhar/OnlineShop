@@ -102,4 +102,23 @@ public class Validator {
         }
         return isCorrect;
     }
+
+    /**
+     * Converts a string to a number
+     *
+     * @param string       string to convert to a number
+     * @param defaultValue the value that will be returned if the string
+     *                     cannot be converted to a number
+     *
+     * @return returns the number that was converted from the string or the
+     * default value if the conversion is not possible
+     */
+    public int getNumber(String string, int defaultValue) {
+        try {
+            return Integer.parseInt(string);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return defaultValue;
+        }
+    }
 }

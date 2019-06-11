@@ -1,3 +1,9 @@
+/**
+ * Checks the user name against the specified pattern
+ *
+ * @param name  name to check
+ * @returns {boolean}   returns true if the name matches the pattern and false otherwise
+ */
 function isNameCorrect(name) {
     var namePattern = /^[A-Za-z0-9_]{4,20}$/;
     var isValid = namePattern.test(name);
@@ -9,13 +15,21 @@ function isNameCorrect(name) {
     return isValid;
 }
 
+/**
+ * Checks the user password against the specified pattern
+ *
+ * @param password  password to check
+ * @param confirm   confirm password
+ * @returns {boolean}   returns true if the password matches the pattern and false otherwise
+ */
 function isPasswordCorrect(password, confirm) {
     var passwordPattern = /((?=.*\d)(?=.*[a-z])(?=.*[A-Z@#$%]).{6,20})/;
     var isValid = passwordPattern.test(password);
     var outputPassword = '';
     var outputConfirm = '';
     if (!isValid) {
-        outputPassword = 'Password must be between 6 and 20 characters and contain only "a-z 0-9 A-Z @#$%" ( one "0-9", one "a-z", one "A-Z @#$%")';
+        outputPassword = 'Password must be between 6 and 20 characters and contain ' +
+            'only "a-z 0-9 A-Z @#$%" ( one "0-9", one "a-z", one "A-Z @#$%")';
     }
     if (isValid && password !== confirm) {
         outputConfirm = 'Password and password confirmation do not match!';
@@ -26,6 +40,12 @@ function isPasswordCorrect(password, confirm) {
     return isValid;
 }
 
+/**
+ * Checks the user mail against the specified pattern
+ *
+ * @param mail  mail to check
+ * @returns {boolean}   returns true if the mail matches the pattern and false otherwise
+ */
 function isMailCorrect(mail) {
     var mailPattern = /^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,50})$/;
     var isValid = mailPattern.test(mail);
