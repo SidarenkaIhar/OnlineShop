@@ -6,8 +6,8 @@ import com.epam.training.onlineshop.entity.order.Order;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.epam.training.onlineshop.configuration.MysqlQueries.*;
@@ -84,6 +84,7 @@ public class OrderDAOImpl extends AbstractDAO<Order> {
      */
     @Override
     public boolean update(Order order) {
+        order.setDateStatusChange(new Date());
         return getInstance().executeDatabaseQuery(UPDATE, this, order, MYSQL_UPDATE_ORDER);
     }
 
@@ -147,11 +148,9 @@ public class OrderDAOImpl extends AbstractDAO<Order> {
         preparedStatement.setInt(1, order.getUserId());
         preparedStatement.setBigDecimal(2, order.getAmount());
         preparedStatement.setInt(3, order.getPaymentId());
-        // convert java.util.Date to java.sql.Date
-        preparedStatement.setTimestamp(4, new Timestamp(order.getCreationDate().getTime()));
+        preparedStatement.setTimestamp(4, order.getCreationDate());
         preparedStatement.setInt(5, order.getOrderStatus().getOrderStatusId());
-        // convert java.util.Date to java.sql.Date
-        preparedStatement.setTimestamp(6, new Timestamp(order.getDateStatusChange().getTime()));
+        preparedStatement.setTimestamp(6, order.getDateStatusChange());
         preparedStatement.setString(7, order.getTrackingNumber());
         return preparedStatement.executeUpdate() > 0;
     }

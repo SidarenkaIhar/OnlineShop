@@ -2,13 +2,11 @@ package com.epam.training.onlineshop.dao;
 
 import com.epam.training.onlineshop.dao.mysql.MysqlDAOFactory;
 import com.epam.training.onlineshop.entity.catalog.Category;
-import com.epam.training.onlineshop.entity.catalog.Manufacturer;
 import com.epam.training.onlineshop.entity.catalog.Product;
 import com.epam.training.onlineshop.entity.order.Order;
-import com.epam.training.onlineshop.entity.order.OrderProduct;
+import com.epam.training.onlineshop.entity.order.OrderedProduct;
 import com.epam.training.onlineshop.entity.order.Payment;
 import com.epam.training.onlineshop.entity.order.ShoppingCart;
-import com.epam.training.onlineshop.entity.page.Page;
 
 /**
  * Abstract dao factory
@@ -44,9 +42,6 @@ public abstract class DAOFactory {
     /*  Returns the corresponding dao category of the database */
     public abstract AbstractDAO<Category> getCategoryDAO();
 
-    /*  Returns the corresponding dao category of the database */
-    public abstract AbstractDAO<Manufacturer> getManufacturerDAO();
-
     /*  Returns the corresponding dao product of the database */
     public abstract AbstractDAO<Product> getProductDAO();
 
@@ -54,16 +49,13 @@ public abstract class DAOFactory {
     public abstract AbstractDAO<Order> getOrderDAO();
 
     /*  Returns the corresponding dao ordered product of the database */
-    public abstract AbstractDAO<OrderProduct> getOrderProductDAO();
+    public abstract AbstractDAO<OrderedProduct> getOrderedProductDAO();
 
     /*  Returns the corresponding dao payment of the database */
     public abstract AbstractDAO<Payment> getPaymentDAO();
 
     /*  Returns the corresponding dao category of the database */
     public abstract AbstractDAO<ShoppingCart> getShoppingCartDAO();
-
-    /*  Returns the corresponding dao page of the database */
-    public abstract AbstractDAO<Page> getPageDAO();
 
     /*  Returns the corresponding dao user of the database */
     public abstract UserDAO getUserDAO();

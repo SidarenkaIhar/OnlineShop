@@ -24,13 +24,6 @@ public class MysqlQueries {
     public static final String MYSQL_UPDATE_CATEGORY;
     public static final String MYSQL_DELETE_CATEGORY;
 
-    // MySQL queries for manufacturers
-    public static final String MYSQL_INSERT_NEW_MANUFACTURER;
-    public static final String MYSQL_SELECT_ALL_MANUFACTURERS;
-    public static final String MYSQL_SELECT_MANUFACTURER;
-    public static final String MYSQL_UPDATE_MANUFACTURER;
-    public static final String MYSQL_DELETE_MANUFACTURER;
-
     // MySQL queries for products
     public static final String MYSQL_INSERT_NEW_PRODUCT;
     public static final String MYSQL_SELECT_ALL_PRODUCTS;
@@ -66,13 +59,6 @@ public class MysqlQueries {
     public static final String MYSQL_UPDATE_CART;
     public static final String MYSQL_DELETE_CART;
 
-    // MySQL queries for pages
-    public static final String MYSQL_INSERT_NEW_PAGE;
-    public static final String MYSQL_SELECT_ALL_PAGES;
-    public static final String MYSQL_SELECT_PAGE;
-    public static final String MYSQL_UPDATE_PAGE;
-    public static final String MYSQL_DELETE_PAGE;
-
     // MySQL queries for users
     public static final String MYSQL_INSERT_NEW_USER;
     public static final String MYSQL_SELECT_ALL_USERS;
@@ -89,12 +75,6 @@ public class MysqlQueries {
         MYSQL_SELECT_CATEGORY = getProperty("mysql.select.category");
         MYSQL_UPDATE_CATEGORY = getProperty("mysql.update.category");
         MYSQL_DELETE_CATEGORY = getProperty("mysql.delete.category");
-        // MySQL queries for manufacturers
-        MYSQL_INSERT_NEW_MANUFACTURER = getProperty("mysql.insert.new.manufacturer");
-        MYSQL_SELECT_ALL_MANUFACTURERS = getProperty("mysql.select.all.manufacturers");
-        MYSQL_SELECT_MANUFACTURER = getProperty("mysql.select.manufacturer");
-        MYSQL_UPDATE_MANUFACTURER = getProperty("mysql.update.manufacturer");
-        MYSQL_DELETE_MANUFACTURER = getProperty("mysql.delete.manufacturer");
         // MySQL queries for products
         MYSQL_INSERT_NEW_PRODUCT = getProperty("mysql.insert.new.product");
         MYSQL_SELECT_ALL_PRODUCTS = getProperty("mysql.select.all.products");
@@ -125,12 +105,6 @@ public class MysqlQueries {
         MYSQL_SELECT_CART = getProperty("mysql.select.cart");
         MYSQL_UPDATE_CART = getProperty("mysql.update.cart");
         MYSQL_DELETE_CART = getProperty("mysql.delete.cart");
-        // MySQL queries for pages
-        MYSQL_INSERT_NEW_PAGE = getProperty("mysql.insert.new.page");
-        MYSQL_SELECT_ALL_PAGES = getProperty("mysql.select.all.pages");
-        MYSQL_SELECT_PAGE = getProperty("mysql.select.page");
-        MYSQL_UPDATE_PAGE = getProperty("mysql.update.page");
-        MYSQL_DELETE_PAGE = getProperty("mysql.delete.page");
         // MySQL queries for users
         MYSQL_INSERT_NEW_USER = getProperty("mysql.insert.new.user");
         MYSQL_SELECT_ALL_USERS = getProperty("mysql.select.all.users");

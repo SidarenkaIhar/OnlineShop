@@ -3,6 +3,7 @@ package com.epam.training.onlineshop.entity.order;
 
 import com.epam.training.onlineshop.entity.Entity;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 
@@ -42,29 +43,29 @@ public class Payment implements Entity {
     /** Customer's region */
     private String region;
 
-    /** Customer payment card */
-    private CreditCard creditCard;
-
     /** Date of payment by the customer */
-    private Date creationDate;
+    private Timestamp creationDate;
 
     // Description of constructors for the class
     public Payment() {
-        this.creationDate = new Date();
+        this.creationDate = new Timestamp(new Date().getTime());
     }
 
-    public Payment(int id, int userId, String firstName, String lastName, int postcode, String address, String city, String country, String region, CreditCard creditCard) {
+    public Payment(String firstName, String lastName, String address, String city, String country, String region) {
         this();
-        this.id = id;
-        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.postcode = postcode;
         this.address = address;
         this.city = city;
         this.country = country;
         this.region = region;
-        this.creditCard = creditCard;
+    }
+
+    public Payment(int id, int userId, String firstName, String lastName, int postcode, String address, String city, String country, String region) {
+        this(firstName, lastName, address, city, country, region);
+        this.id = id;
+        this.userId = userId;
+        this.postcode = postcode;
     }
 
     // Getters and setters for class fields
@@ -140,20 +141,16 @@ public class Payment implements Entity {
         this.region = region;
     }
 
-    public CreditCard getCreditCard() {
-        return creditCard;
-    }
-
-    public void setCreditCard(CreditCard creditCard) {
-        this.creditCard = creditCard;
-    }
-
-    public Date getCreationDate() {
+    public Timestamp getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = new Timestamp(creationDate.getTime());
     }
 
     /**
@@ -171,17 +168,14 @@ public class Payment implements Entity {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Payment payment = (Payment) obj;
-        return id == payment.id &&
-                userId == payment.userId &&
+        return userId == payment.userId &&
                 postcode == payment.postcode &&
                 Objects.equals(firstName, payment.firstName) &&
                 Objects.equals(lastName, payment.lastName) &&
                 Objects.equals(address, payment.address) &&
                 Objects.equals(city, payment.city) &&
                 Objects.equals(country, payment.country) &&
-                Objects.equals(region, payment.region) &&
-                Objects.equals(creditCard, payment.creditCard) &&
-                Objects.equals(creationDate, payment.creationDate);
+                Objects.equals(region, payment.region);
     }
 
     /**
@@ -191,8 +185,7 @@ public class Payment implements Entity {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, firstName, lastName, postcode, address,
-                            city, country, region, creditCard, creationDate);
+        return Objects.hash(userId, firstName, lastName, postcode, address, city, country, region);
     }
 
     /**
@@ -212,7 +205,6 @@ public class Payment implements Entity {
                 ", city='" + city + '\'' +
                 ", country='" + country + '\'' +
                 ", region='" + region + '\'' +
-                ", creditCard=" + creditCard +
                 ", creationDate=" + creationDate +
                 '}';
     }

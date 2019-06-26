@@ -6,7 +6,6 @@ import com.epam.training.onlineshop.entity.order.Payment;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,8 +153,7 @@ public class PaymentDAOImpl extends AbstractDAO<Payment> {
         preparedStatement.setString(6, payment.getCity());
         preparedStatement.setString(7, payment.getCountry());
         preparedStatement.setString(8, payment.getRegion());
-        // convert java.util.Date to java.sql.Date
-        preparedStatement.setTimestamp(9, new Timestamp(payment.getCreationDate().getTime()));
+        preparedStatement.setTimestamp(9, payment.getCreationDate());
         return preparedStatement.executeUpdate() > 0;
     }
 

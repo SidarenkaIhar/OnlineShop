@@ -106,8 +106,7 @@ public class Category implements Entity {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Category category = (Category) obj;
-        return id == category.id &&
-                parentId == category.parentId &&
+        return parentId == category.parentId &&
                 Objects.equals(name, category.name);
     }
 
@@ -118,7 +117,7 @@ public class Category implements Entity {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, parentId, name);
+        return Objects.hash(parentId, name);
     }
 
     /**

@@ -31,7 +31,7 @@ public class ConfigurationManager {
      * @return returns the ResourceBundle corresponding to the
      * configuration file
      */
-    public ResourceBundle getResourceBundle(String propertyPath) {
+    ResourceBundle getResourceBundle(String propertyPath) {
         return ResourceBundle.getBundle(propertyPath, new UTF8Control());
     }
 }

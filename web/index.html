@@ -1,71 +1,205 @@
-<!DOCTYPE html>
-<html>
+<html dir="ltr" lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>List of users</title>
+    <meta charset="UTF-8">
+    <title>Online Shop</title>
+    <meta name="description" content="My Store">
     <script src="/js/common.js"></script>
     <link rel="stylesheet" href="/css/stylesheet.css" type="text/css">
     <link rel="stylesheet" href="/css/bootstrap.css" type="text/css">
     <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css">
 </head>
 <body onload="postServletJSON('/homeServlet')">
-<div id="container">
-    <div id="content">
-        <div class="page-header">
-            <div class="container-fluid">
-                <div class="pull-right">
-                    <a href="/" data-toggle="tooltip" title="Home" class="btn btn-primary"><i class="fa fa-home"></i></a>
-                    <a href="/edituser.html" data-toggle="tooltip" title="Add new user" class="btn btn-primary"><i class="fa fa-plus"></i></a>
-                    <button type="button" data-toggle="tooltip" title="Remove selected users" class="btn btn-danger"
-                            onclick="confirm('Do you really want to delete the selected users?') ? deleteUsers() : false;"><i class="fa fa-trash-o"></i></button>
+<nav id="top">
+    <div class="container">
+        <div class="pull-left">
+            <ul>
+                <li><i class="fa fa-phone"></i> <span class="hidden-xs hidden-sm hidden-md">+375 (22) 789-43-101</span></li>
+                <li><i class="fa fa-building-o"></i> <span class="hidden-xs hidden-sm hidden-md">246746, Kastryčnika Ave 48, Gomel</span></li>
+            </ul>
+        </div>
+        <div id="top-links" class="nav pull-right">
+            <ul class="list-inline">
+                <li><i class="fa fa-user"></i> <span class="hidden-xs hidden-sm hidden-md" id="userLogin"><a href="/html/login.html" title="Log In">Log In</a></span></li>
+                |
+                <li><i class="fa fa-sign-out"></i> <span class="hidden-xs hidden-sm hidden-md"><a href="/loginServlet" title="Log Out">Log Out</a></span></li>
+                <li><a href="/html/cart.html" title="Shopping Cart"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Shopping Cart</span></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <div id="logo"><h1><a href="/">Online Shop</a></h1>
                 </div>
-                <h1>List of users of the online shop</h1>
             </div>
         </div>
-        <div id="messageFailed" class="alert alert-danger alert-dismissible" style="display: none"><i class="fa fa-exclamation-circle"></i>
-            <div id="messageFailedText" style="display: inline-block"></div>
-            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageFailed')">&times;</button>
+    </div>
+</header>
+<div class="container">
+    <nav id="menu" class="navbar">
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav" id="userMenu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/html/cart.html" title="Shopping Cart">Shopping Cart</a></li>
+                <li><a href="/#" title="Information">Information</a></li>
+                <li><a href="/#" title="Privacy Policy">Privacy Policy</a></li>
+            </ul>
+            <ul class="nav navbar-nav" id="adminMenu">
+                <li><a href="/">||</a></li>
+                <li class="dropdown"><a href="/html/admin/carts.html" class="dropdown-toggle" data-toggle="dropdown">Cart</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/carts.html">Show all</a></li>
+                                <li><a href="/html/admin/editcart.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/orders.html" class="dropdown-toggle" data-toggle="dropdown">Order</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/orders.html">Show all</a></li>
+                                <li><a href="/html/admin/editorder.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/orderedproducts.html" class="dropdown-toggle" data-toggle="dropdown">Ordered Product</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/orderedproducts.html">Show all</a></li>
+                                <li><a href="/html/admin/editorderedproduct.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/payments.html" class="dropdown-toggle" data-toggle="dropdown">Payment</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/payments.html">Show all</a></li>
+                                <li><a href="/html/admin/editpayment.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/products.html" class="dropdown-toggle" data-toggle="dropdown">Product</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/products.html">Show all</a></li>
+                                <li><a href="/html/admin/editproduct.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/users.html" class="dropdown-toggle" data-toggle="dropdown">User</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/users.html">Show all</a></li>
+                                <li><a href="/html/admin/edituser.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
         </div>
-        <div id="messageSuccess" class="alert alert-success alert-dismissible" style="display: none"><i class="fa fa-check-circle"></i>
-            <div id="messageSuccessText" style="display: inline-block"></div>
-            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageSuccess')">&times;</button>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-list"></i>Editable users</h3>
+    </nav>
+</div> 
+<div id="common-home" class="container">
+    <div id="messageFailed" class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i>
+        <div id="messageFailedText"></div>
+        <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageFailed')">&times;</button>
+    </div>
+    <div id="messageSuccess" class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i>
+        <div id="messageSuccessText"></div>
+        <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageSuccess')">&times;</button>
+    </div>
+    <div class="row">
+        <div class="banner-static static-home">
+            <div class="inner">
+                <div class="col">
+                    <div class="image">
+                        <img src="/image/img1-home.jpg" alt="img1">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="image">
+                        <img src="/image/img2-home.jpg" alt="img2">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="image">
+                        <img src="/image/img3-home.jpg" alt="img3">
+                    </div>
+                </div>
             </div>
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <form action="/" method="post" id="form-deleteuser">
-                        <table class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <td class="text-center"> Select</td>
-                                <td class="text-left"> User id</td>
-                                <td class="text-left"> User group</td>
-                                <td class="text-left"> User name</td>
-                                <td class="text-left"> Password</td>
-                                <td class="text-left"> Email</td>
-                                <td class="text-left"> Is active</td>
-                                <td class="text-left"> Date added</td>
-                                <td class="text-center"> Action</td>
-                            </tr>
-                            </thead>
-                            <tbody id="allUsersList">
-                            <tr>
-                                <td class="text-center" colspan="9">Users not found in the database.</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </form>
-                    <form action="/edituser.html" method="get" id="form-edituser">
-                        <input type="hidden" name="typeOperation" id="user_typeOperation" value="SELECT">
-                        <input type="hidden" name="usersToEdit" id="user_id" value="">
-                    </form>
+        </div>
+        <div id="content" class="col-sm-12">
+            <div class="module-title">
+                <h2>Our Products</h2>
+                <div class="module-description">
+                    <p>The best products at reasonable prices and the wide range only for our dear buyers!</p>
+                </div>
+            </div>
+            <div class="row" id="productCatalog"></div>
+            <input type="hidden" name="id" id="user_id" value="-1">
+            <div class="policy-block">
+                <div class="inner">
+                    <div class="col ">
+                        <div class="box shipping">
+                            <div class="text">
+                                <h4>Free Shipping Worldwide</h4>
+                                <p>We offer free shipping via Standard Shipping on orders over $200.00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col ">
+                        <div class="box money">
+                            <div class="text">
+                                <h4>Money Back Guarantee</h4>
+                                <p>If you're not satisfied with our product, we'll refund the purchase price*.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col ">
+                        <div class="box support">
+                            <div class="text">
+                                <h4>online support 24/7 </h4>
+                                <p>Our friendly support team is available to help you 24 hours a day, seven days a week</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <h5>Information</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Delivery Information</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Privacy Policy</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Terms &amp; Conditions</h5>
+            </div>
+        </div>
+        <hr>
+        <p>Online Shop © 2019</p>
+    </div>
+</footer>
 </body>
 </html>

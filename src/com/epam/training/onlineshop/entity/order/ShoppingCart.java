@@ -32,12 +32,21 @@ public class ShoppingCart implements Entity {
     public ShoppingCart() {
     }
 
-    public ShoppingCart(int id, int userId, int productId, BigDecimal productPrice, int productQuantity) {
-        this.id = id;
+    public ShoppingCart(BigDecimal productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public ShoppingCart(int userId, int productId, BigDecimal productPrice, int productQuantity) {
+        this(productPrice);
         this.userId = userId;
         this.productId = productId;
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
+    }
+
+    public ShoppingCart(int id, int userId, int productId, BigDecimal productPrice, int productQuantity) {
+        this(userId, productId, productPrice, productQuantity);
+        this.id = id;
     }
 
     // Getters and setters for class fields
@@ -96,10 +105,8 @@ public class ShoppingCart implements Entity {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         ShoppingCart that = (ShoppingCart) obj;
-        return id == that.id &&
-                userId == that.userId &&
-                productId == that.productId &&
-                Objects.equals(productPrice, that.productPrice);
+        return userId == that.userId &&
+                productId == that.productId;
     }
 
     /**
@@ -109,7 +116,7 @@ public class ShoppingCart implements Entity {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, productId, productPrice);
+        return Objects.hash(userId, productId);
     }
 
     /**

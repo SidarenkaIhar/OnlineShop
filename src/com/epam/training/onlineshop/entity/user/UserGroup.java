@@ -1,4 +1,4 @@
-package com.epam.training.onlineshop.users;
+package com.epam.training.onlineshop.entity.user;
 
 /**
  * All customers belong to a certain group

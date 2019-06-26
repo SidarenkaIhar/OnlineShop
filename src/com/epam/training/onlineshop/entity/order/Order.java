@@ -3,6 +3,7 @@ package com.epam.training.onlineshop.entity.order;
 import com.epam.training.onlineshop.entity.Entity;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 
@@ -30,33 +31,38 @@ public class Order implements Entity {
     private int paymentId;
 
     /** Customer order creation date */
-    private Date creationDate;
+    private Timestamp creationDate;
 
     /** Order status */
     private OrderStatus orderStatus;
 
     /** Date of the status change of the order */
-    private Date dateStatusChange;
+    private Timestamp dateStatusChange;
 
     /** The tracking number of the order */
     private String trackingNumber;
 
     // Description of constructors for the class
     public Order() {
-        this.creationDate = new Date();
-        this.setOrderStatus(NEW);
+        this.creationDate = new Timestamp(new Date().getTime());
+        this.orderStatus = NEW;
     }
 
-    public Order(int userId, BigDecimal amount) {
+    public Order(int userId, BigDecimal amount, int paymentId) {
         this();
         this.userId = userId;
         this.amount = amount;
+        this.paymentId = paymentId;
+        this.dateStatusChange = new Timestamp(new Date().getTime());
+        this.trackingNumber = "";
     }
 
-    public Order(int id, int userId, BigDecimal amount, int paymentId, OrderStatus orderStatus, Date dateStatusChange, String trackingNumber) {
-        this(userId, amount);
+    public Order(int id, int userId, BigDecimal amount, int paymentId, Timestamp creationDate, OrderStatus orderStatus, Timestamp dateStatusChange, String trackingNumber) {
         this.id = id;
+        this.userId = userId;
+        this.amount = amount;
         this.paymentId = paymentId;
+        this.creationDate = creationDate;
         this.orderStatus = orderStatus;
         this.dateStatusChange = dateStatusChange;
         this.trackingNumber = trackingNumber;
@@ -95,12 +101,16 @@ public class Order implements Entity {
         this.paymentId = paymentId;
     }
 
-    public Date getCreationDate() {
+    public Timestamp getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = new Timestamp(creationDate.getTime());
     }
 
     public OrderStatus getOrderStatus() {
@@ -115,11 +125,15 @@ public class Order implements Entity {
         this.orderStatus = getOrderStatusById(orderStatusId);
     }
 
-    public Date getDateStatusChange() {
+    public Timestamp getDateStatusChange() {
         return dateStatusChange;
     }
 
     public void setDateStatusChange(Date dateStatusChange) {
+        this.dateStatusChange = new Timestamp(dateStatusChange.getTime());
+    }
+
+    public void setDateStatusChange(Timestamp dateStatusChange) {
         this.dateStatusChange = dateStatusChange;
     }
 
@@ -146,8 +160,7 @@ public class Order implements Entity {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Order order = (Order) obj;
-        return id == order.id &&
-                userId == order.userId &&
+        return userId == order.userId &&
                 paymentId == order.paymentId &&
                 Objects.equals(amount, order.amount) &&
                 Objects.equals(creationDate, order.creationDate);
@@ -160,7 +173,7 @@ public class Order implements Entity {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, amount, paymentId, creationDate);
+        return Objects.hash(userId, amount, paymentId, creationDate);
     }
 
     /**

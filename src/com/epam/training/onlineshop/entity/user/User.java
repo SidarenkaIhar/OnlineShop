@@ -1,14 +1,14 @@
 package com.epam.training.onlineshop.entity.user;
 
 import com.epam.training.onlineshop.entity.Entity;
-import com.epam.training.onlineshop.users.UserGroup;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
-import static com.epam.training.onlineshop.users.UserGroup.CUSTOMER;
-import static com.epam.training.onlineshop.users.UserGroup.getGroupById;
+import static com.epam.training.onlineshop.entity.user.UserGroup.CUSTOMER;
+import static com.epam.training.onlineshop.entity.user.UserGroup.getGroupById;
 
 /**
  * The basis of the user of the online store to build
@@ -38,12 +38,12 @@ public class User implements Entity {
     private boolean isEnabled;
 
     /** The creation date of the user account */
-    private Date creationDate;
+    private Timestamp creationDate;
 
     // Description of constructors for the class
     public User() {
         this.group = CUSTOMER;
-        this.creationDate = new Date();
+        this.creationDate = new Timestamp(new Date().getTime());
     }
 
     public User(String name, String password, String email) {
@@ -134,12 +134,16 @@ public class User implements Entity {
         isEnabled = (enabled == 1);
     }
 
-    public Date getCreationDate() {
+    public Timestamp getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = new Timestamp(creationDate.getTime());
     }
 
     /**
@@ -157,10 +161,7 @@ public class User implements Entity {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         User user = (User) obj;
-        return id == user.id &&
-                Objects.equals(name, user.name) &&
-                Arrays.equals(password, user.password) &&
-                Objects.equals(email, user.email);
+        return Objects.equals(email, user.email);
     }
 
     /**
@@ -170,9 +171,7 @@ public class User implements Entity {
      */
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, name, email);
-        result = 31 * result + Arrays.hashCode(password);
-        return result;
+        return Objects.hash(email);
     }
 
     /**

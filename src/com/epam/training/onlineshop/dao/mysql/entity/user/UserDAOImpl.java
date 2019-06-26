@@ -6,7 +6,6 @@ import com.epam.training.onlineshop.entity.user.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -176,8 +175,7 @@ public class UserDAOImpl extends UserDAO {
         preparedStatement.setString(3, new String(user.getPassword()));
         preparedStatement.setString(4, user.getEmail());
         preparedStatement.setInt(5, user.isEnabled() ? 1 : 0);
-        // convert java.util.Date to java.sql.Date
-        preparedStatement.setTimestamp(6, new Timestamp(user.getCreationDate().getTime()));
+        preparedStatement.setTimestamp(6, user.getCreationDate());
         return preparedStatement.executeUpdate() > 0;
     }
 

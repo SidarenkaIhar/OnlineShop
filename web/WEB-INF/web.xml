@@ -19,11 +19,19 @@
 
     <error-page>
         <error-code>404</error-code>
-        <location>/html/error/404.html</location>
+        <location>/html/404.html</location>
     </error-page>
 
-    <error-page>
-        <exception-type>java.lang.Throwable</exception-type >
-        <location>/html/error/exception.jsp</location>
-    </error-page>
+    <filter>
+        <filter-name>ServletSecurityFilter</filter-name>
+        <filter-class>com.epam.training.onlineshop.controller.filter.ServletSecurityFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ServletSecurityFilter</filter-name>
+        <url-pattern>/html/admin/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ServletSecurityFilter</filter-name>
+        <url-pattern>/controller</url-pattern>
+    </filter-mapping>
 </web-app>

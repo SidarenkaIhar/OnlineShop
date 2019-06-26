@@ -29,50 +29,115 @@ function parseJSON(request) {
     var req = JSON.parse(request);
     for (var val in req) {
         switch (val) {
-            case "usersToShow":
-                showUsers(req[val]);
+            case "userLogin":
+                document.getElementById("userLogin").innerHTML = 'Welcome ' + req[val];
                 break;
-            case "userGroups":
-                setUserGroups(req[val]);
+            case "showAdminMenu":
+                if (req[val] === true) {
+                    document.getElementById("adminMenu").style.display = 'block';
+                }
                 break;
-            case "editableUser":
-                editableUser(req[val]);
+            case "productCatalog":
+                showProductCatalog(req[val]);
+                break;
+            case "entitiesToShow":
+                showEntities(req[val]);
+                break;
+            case "userCart":
+                showEntities(req[val]);
+                break;
+            case "namesProducts":
+                setNamesProducts(req[val]);
+                break;
+            case "editableEntity":
+                editableEntity(req[val]);
                 break;
             case "messageSuccess":
             case "messageFailed":
                 showMessage(val, req[val].trim());
                 break;
             case "typeOperation":
-                document.getElementById("user_typeOperation").value = req[val];
+                document.getElementById("typeOperation").value = req[val];
+                break;
+            case "userGroups":
+                setUserGroups(req[val]);
+                break;
+            case "categories":
+                setCategories(req[val]);
+                break;
+            case "orderStatuses":
+                setOrderStatuses(req[val]);
                 break;
         }
     }
 }
 
 /**
- * Displays all users of the store
+ * Displays the online store product catalog
  *
- * @param users the users of the store
+ * @param products  the online store product catalog
  */
-function showUsers(users) {
+function showProductCatalog(products) {
     var output = '';
-    for (var user in users) {
-        output += '<tr>';
-        output += '<td class="text-center"><input type="checkbox" name="selected[]" value="' + users[user].id + '"/></td>';
-        for (var key in users[user]) {
-            output += '<td class="text-left" id="' + key + '">';
-            if (key === "password") {
-                output += users[user][key].join("");
+    for (var product in products) {
+        var prod = products[product];
+        var image = prod.image === '' ? '/image/noimage.png' : prod.image;
+        output += '<div class="product-layout col-lg-3 col-md-3 col-sm-6 col-xs-12"><div class="product-thumb transition">' +
+            '<div class="image"><img src="' + image + '" alt="' + prod.name + '" title="' + prod.name + '" class="img-responsive"></div>' +
+            '<div class="caption"><h4>' + prod.name + '</h4><p>' + prod.description.substring(0, 200) + '...</p><p class="price">$' + prod.price + '</p></div>' +
+            '<div class="button-group"><button type="button" onclick="addToCart(' + prod.id + ',' + prod.price + ');"><i class="fa fa-shopping-cart"></i> ' +
+            '<span class="hidden-xs hidden-sm hidden-md">Add to Cart</span></button></div></div></div>'
+    }
+    if (output.length === 0) {
+        output = 'Nothing found on your request.';
+    }
+    document.getElementById("productCatalog").innerHTML = output;
+
+}
+
+/**
+ * Displays all entities of the store
+ *
+ * @param entities the entities of the store
+ */
+function showEntities(entities) {
+    var output = '';
+    for (var entity in entities) {
+        var ent = entities[entity];
+        output += '<tr><td class="text-center"><input type="checkbox" name="selected[]" value="' + ent.id + '"/></td>';
+        for (var key in ent) {
+            if (key === "productId") {
+                output += '<td class="text-left" id="entity_' + key + ent[key] + '">';
             } else {
-                output += users[user][key];
+                output += '<td class="text-left" id="entity_' + key + '">';
+            }
+            if (key === "password") {
+                output += ent[key].join("");
+            } else {
+                output += ent[key];
             }
             output += '</td>';
         }
-        output += '<td class="text-center"><button type="button" data-toggle="tooltip" title="Edit user" class="btn btn-primary" ' +
-            'onclick=editUser("' + users[user].id + '")><i class="fa fa-pencil"></i></button></td></tr>';
+        output += '<td class="text-center"><button type="button" data-toggle="tooltip" title="Edit" class="btn btn-primary" ' +
+            'onclick=editEntity("' + ent.id + '")><i class="fa fa-pencil"></i></button></td></tr>';
     }
-    if (output.length > 0) {
-        document.getElementById("allUsersList").innerHTML = output;
+    if (output.length === 0) {
+        output = '<tr><td class="text-center" colspan="20">Nothing found on your request.</td></tr>';
+    }
+    document.getElementById("allEntitiesList").innerHTML = output;
+}
+
+/**
+ * Displays the names of products in the shopping cart
+ *
+ * @param products  product names to display
+ */
+function setNamesProducts(products) {
+    for (var product in products) {
+        var productId = document.getElementById('entity_productId' + products[product].id);
+        if (productId) {
+            productId.innerHTML = products[product].name;
+        }
     }
 }
 
@@ -82,33 +147,59 @@ function showUsers(users) {
  * @param userGroups    the user group store
  */
 function setUserGroups(userGroups) {
-    var output = '<select name="group" id="user_group" class="form-control">';
+    var output = '<select name="group" id="entity_group" class="form-control">';
     for (var group in userGroups) {
         output += '<option value="' + userGroups[group] + '">' + userGroups[group] + '</option>';
     }
     output += '</select>';
-    if (document.getElementById("userGroups")) {
-        document.getElementById("userGroups").innerHTML = output;
-    }
+    document.getElementById("userGroups").innerHTML = output;
 }
 
 /**
- * Displays the settings of the currently edited user
+ * Displays all categories of the store
  *
- * @param user  the currently edited user
+ * @param categories    categories of the store
  */
-function editableUser(user) {
-    for (var field in user) {
-        document.getElementById("user_" + field).value = user[field];
+function setCategories(categories) {
+    var output = '<select name="categoryId" id="entity_categoryId" class="form-control">';
+    for (var category in categories) {
+        output += '<option value="' + categories[category].id + '">' + categories[category].name + '</option>';
+    }
+    output += '</select>';
+    document.getElementById("categories").innerHTML = output;
+}
+
+/**
+ * Displays all order statuses of the store
+ *
+ * @param statuses    statuses of the store
+ */
+function setOrderStatuses(statuses) {
+    var output = '<select name="orderStatus" id="entity_orderStatus" class="form-control">';
+    for (var status in statuses) {
+        output += '<option value="' + statuses[status] + '">' + statuses[status] + '</option>';
+    }
+    output += '</select>';
+    document.getElementById("orderStatus").innerHTML = output;
+}
+
+/**
+ * Displays the settings of the currently edited entity
+ *
+ * @param entity  the currently edited entity
+ */
+function editableEntity(entity) {
+    for (var field in entity) {
+        document.getElementById('entity_' + field).value = entity[field];
         switch (field) {
             case "id":
-                if (user[field] > 0) {
-                    document.getElementById("welcome_message").innerHTML = "Edit user №" + user[field];
+                if (entity[field] > 0) {
+                    document.getElementById("welcome_message").innerHTML = "Edit entity №" + entity[field];
                 }
                 break;
             case "password":
-                document.getElementById("user_password").value = user[field].join("");
-                document.getElementById("confirm_password").value = user[field].join("");
+                document.getElementById("entity_password").value = entity[field].join("");
+                document.getElementById("entity_confirm").value = entity[field].join("");
                 break;
         }
     }
@@ -124,6 +215,7 @@ function showMessage(messageId, text) {
     if (text.length > 0) {
         document.getElementById(messageId).style.display = 'block';
         document.getElementById(messageId + 'Text').innerHTML = text;
+        window.scrollTo(0, 0);
     } else {
         hideMessage(messageId);
     }
@@ -141,40 +233,55 @@ function hideMessage(messageId) {
 }
 
 /**
- * Removes all marked users
+ * Removes all marked entities
  */
-function deleteUsers() {
-    var users = [];
-    var formDelete = document.getElementById("form-deleteuser");
+function deleteEntities(servet) {
+    var entities = [];
+    var formDelete = document.getElementById("form-deleteEntity");
     for (var i = 0; i < formDelete.elements.length; i++) {
         if (formDelete.elements[i].name === "selected[]" && formDelete.elements[i].checked) {
-            users.push(formDelete.elements[i].value);
+            entities.push(formDelete.elements[i].value);
         }
     }
-    var usersToEdit = {"usersToEdit": users, "typeOperation": "DELETE"};
-    postServletJSON("/homeServlet", usersToEdit);
+    var entitiesToEdit = {"entitiesToEdit": entities, "typeOperation": "DELETE"};
+    postServletJSON(servet, entitiesToEdit);
 }
 
 /**
- * Sends to the edit user page
+ * Sends to the edit entity page
  *
- * @param userId    user id
+ * @param entityId    entity id
  */
-function editUser(userId) {
-    document.getElementById("user_id").value = userId;
-    var form = document.getElementById("form-edituser");
+function editEntity(entityId) {
+    document.getElementById("entitiesToEdit").value = entityId;
+    var form = document.getElementById("form-editEntity");
     form.submit();
 }
 
 /**
  * Processes and applies the parameters passed to the page
  */
-function applyingParameters() {
+function applyingParameters(servlet) {
+    setCurrentTime();
     var param = getAllUrlParams();
-    if (param.typeOperation === "SELECT" && param.usersToEdit && param.usersToEdit >= 0) {
-        getUserToEdit(param.usersToEdit);
+    if (param.typeOperation === "SELECT" && param.entitiesToEdit && param.entitiesToEdit >= 0) {
+        getEntityToEdit(param.entitiesToEdit, servlet);
     } else {
-        postServletJSON('/editUserServlet');
+        postServletJSON(servlet);
+    }
+}
+
+/**
+ * Sets the current time when new items are added
+ */
+function setCurrentTime() {
+    var creationDate = document.getElementById("entity_creationDate");
+    var dateStatusChange = document.getElementById("entity_dateStatusChange");
+    if (creationDate) {
+        creationDate.value = new Date().toISOString();
+    }
+    if (dateStatusChange) {
+        dateStatusChange.value = new Date().toISOString();
     }
 }
 
@@ -217,39 +324,58 @@ function getAllUrlParams(url) {
 }
 
 /**
- * Get user from database for editing
+ * Get entity from database for editing
  *
- * @param userId    user id
+ * @param entityId    entity id
  */
-function getUserToEdit(userId) {
-    var user = [userId];
-    var usersToEdit = {"usersToEdit": user, "typeOperation": "SELECT"};
-    postServletJSON("/editUserServlet", usersToEdit);
+function getEntityToEdit(entityId, servlet) {
+    var entity = [entityId];
+    var entitiesToEdit = {"entitiesToEdit": entity, "typeOperation": "SELECT"};
+    postServletJSON(servlet, entitiesToEdit);
 }
 
 /**
- * Save user data to the database
+ * Save entity data to the database
  */
-function saveUser() {
-    var userName = document.getElementById('user_name').value;
-    var userPassword = document.getElementById('user_password').value;
-    var confirmPassword = document.getElementById('confirm_password').value;
-    var userEmail = document.getElementById('user_email').value;
-    if (isNameCorrect(userName) && isPasswordCorrect(userPassword, confirmPassword) && isMailCorrect(userEmail)) {
-        var user = {};
-        var typeOperation = document.getElementById("user_typeOperation").value;
-        var userForm = document.getElementById("form-user");
-        for (var i = 0; i < userForm.elements.length; i++) {
-            if (userForm.elements[i].id.includes("user_")) {
-                if (userForm.elements[i].name === "password") {
-                    user[userForm.elements[i].name] = userForm.elements[i].value.split('');
-                    continue;
-                }
-                user[userForm.elements[i].name] = userForm.elements[i].value;
+function saveEntity(servlet) {
+    var entity = {};
+    var typeOperation = document.getElementById("typeOperation").value;
+    var entityForm = document.getElementById("form-entity");
+    for (var i = 0; i < entityForm.elements.length; i++) {
+        var element = entityForm.elements[i];
+        if (element.id.includes("entity_")) {
+            if ((element.name === "string" && !isString(element.value, element.id)) ||
+                (element.name === "float" && !isFloat(element.value, element.id)) ||
+                (element.name === "integer" && !isInteger(element.value, element.id)) ||
+                (element.name === "url" && !isUrl(element.value, element.id)) ||
+                (element.name === "name" && !isNameCorrect(element.value, element.id)) ||
+                (element.name === "email" && !isMailCorrect(element.value, element.id))) {
+                return;
             }
+            if (element.name === "password") {
+                var confirmPassword = document.getElementById('entity_confirm').value;
+                if (!isPasswordCorrect(element.value, confirmPassword, element.id, 'entity_confirm')) {
+                    return;
+                }
+                entity[element.name] = element.value.split('');
+                continue;
+            }
+            entity[element.id.replace("entity_", "")] = element.value.trim();
         }
-        var editableUser = {"editableUser": user, "typeOperation": typeOperation};
-        postServletJSON("/editUserServlet", editableUser);
     }
+    var editableEntity = {"editableEntity": entity, "typeOperation": typeOperation};
+    postServletJSON(servlet, editableEntity);
 }
 
+/**
+ * Adds products from the catalog to the shopping cart
+ *
+ * @param productId     product id to add
+ * @param productPrice  product price to add
+ */
+function addToCart(productId, productPrice) {
+    var userId = document.getElementById("user_id").value;
+    var cart = {"userId": userId, "productId": productId, "productPrice": productPrice, "productQuantity": 1};
+    var shoppingCart = {"shoppingCart": cart, "typeOperation": "INSERT"};
+    postServletJSON('/homeServlet', shoppingCart);
+}

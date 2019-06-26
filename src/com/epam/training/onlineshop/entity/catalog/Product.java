@@ -3,6 +3,7 @@ package com.epam.training.onlineshop.entity.catalog;
 import com.epam.training.onlineshop.entity.Entity;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 
@@ -24,8 +25,8 @@ public class Product implements Entity {
     /** Product description */
     private String description;
 
-    /** Product manufacturer ID */
-    private int manufacturerId;
+    /** Product manufacturer */
+    private String manufacturer;
 
     /** Product category ID */
     private int categoryId;
@@ -40,7 +41,7 @@ public class Product implements Entity {
     private String image;
 
     /** Date the product was added to the product catalog */
-    private Date creationDate;
+    private Timestamp creationDate;
 
     /** Product sort order */
     private int sortOrder;
@@ -50,7 +51,7 @@ public class Product implements Entity {
 
     // Description of constructors for the class
     public Product() {
-        this.creationDate = new Date();
+        this.creationDate = new Timestamp(new Date().getTime());
     }
 
     public Product(String name, String description) {
@@ -59,14 +60,18 @@ public class Product implements Entity {
         this.description = description;
     }
 
-    public Product(int id, String name, String description, int manufacturerId, int categoryId, BigDecimal price, int quantity, String image, int sortOrder, boolean isEnabled) {
+    public Product(String name, String description, String manufacturer, BigDecimal price, String image) {
         this(name, description);
-        this.id = id;
-        this.manufacturerId = manufacturerId;
-        this.categoryId = categoryId;
+        this.manufacturer = manufacturer;
         this.price = price;
-        this.quantity = quantity;
         this.image = image;
+    }
+
+    public Product(int id, String name, String description, String manufacturer, int categoryId, int quantity, BigDecimal price, String image, int sortOrder, boolean isEnabled) {
+        this(name, description, manufacturer, price, image);
+        this.id = id;
+        this.categoryId = categoryId;
+        this.quantity = quantity;
         this.sortOrder = sortOrder;
         this.isEnabled = isEnabled;
     }
@@ -96,12 +101,12 @@ public class Product implements Entity {
         this.description = description;
     }
 
-    public int getManufacturerId() {
-        return manufacturerId;
+    public String getManufacturer() {
+        return manufacturer;
     }
 
-    public void setManufacturerId(int manufacturerId) {
-        this.manufacturerId = manufacturerId;
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     public int getCategoryId() {
@@ -136,12 +141,16 @@ public class Product implements Entity {
         this.image = image;
     }
 
-    public Date getCreationDate() {
+    public Timestamp getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = new Timestamp(creationDate.getTime());
     }
 
     public int getSortOrder() {
@@ -154,10 +163,6 @@ public class Product implements Entity {
 
     public boolean isEnabled() {
         return isEnabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
     }
 
     public void setEnabled(int enabled) {
@@ -179,13 +184,10 @@ public class Product implements Entity {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Product product = (Product) obj;
-        return id == product.id &&
-                manufacturerId == product.manufacturerId &&
-                categoryId == product.categoryId &&
+        return categoryId == product.categoryId &&
                 Objects.equals(name, product.name) &&
                 Objects.equals(description, product.description) &&
-                Objects.equals(price, product.price) &&
-                Objects.equals(image, product.image);
+                Objects.equals(manufacturer, product.manufacturer);
     }
 
     /**
@@ -195,7 +197,7 @@ public class Product implements Entity {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, manufacturerId, categoryId, price, image);
+        return Objects.hash(name, description, manufacturer, categoryId);
     }
 
     /**
@@ -209,7 +211,7 @@ public class Product implements Entity {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", manufacturerId=" + manufacturerId +
+                ", manufacturer=" + manufacturer +
                 ", categoryId=" + categoryId +
                 ", price=" + price +
                 ", quantity=" + quantity +

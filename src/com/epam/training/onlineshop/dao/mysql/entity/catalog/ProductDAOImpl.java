@@ -6,7 +6,6 @@ import com.epam.training.onlineshop.entity.catalog.Product;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,7 +117,7 @@ public class ProductDAOImpl extends AbstractDAO<Product> {
             newProduct.setId(resultSet.getInt("product_id"));
             newProduct.setName(resultSet.getString("name"));
             newProduct.setDescription(resultSet.getString("description"));
-            newProduct.setManufacturerId(resultSet.getInt("manufacturer_id"));
+            newProduct.setManufacturer(resultSet.getString("manufacturer"));
             newProduct.setCategoryId(resultSet.getInt("category_id"));
             newProduct.setPrice(resultSet.getBigDecimal("price"));
             newProduct.setQuantity(resultSet.getInt("quantity"));
@@ -149,13 +148,12 @@ public class ProductDAOImpl extends AbstractDAO<Product> {
     public boolean executeInsertRequest(PreparedStatement preparedStatement, Product product) throws SQLException {
         preparedStatement.setString(1, product.getName());
         preparedStatement.setString(2, product.getDescription());
-        preparedStatement.setInt(3, product.getManufacturerId());
+        preparedStatement.setString(3, product.getManufacturer());
         preparedStatement.setInt(4, product.getCategoryId());
         preparedStatement.setBigDecimal(5, product.getPrice());
         preparedStatement.setInt(6, product.getQuantity());
         preparedStatement.setString(7, product.getImage());
-        // convert java.util.Date to java.sql.Date
-        preparedStatement.setTimestamp(8, new Timestamp(product.getCreationDate().getTime()));
+        preparedStatement.setTimestamp(8, product.getCreationDate());
         preparedStatement.setInt(9, product.getSortOrder());
         preparedStatement.setInt(10, product.isEnabled() ? 1 : 0);
         return preparedStatement.executeUpdate() > 0;

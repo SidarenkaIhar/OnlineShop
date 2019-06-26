@@ -12,7 +12,7 @@ import java.util.Objects;
  * @author Ihar Sidarenka
  * @version 0.1 07 Apr 2019
  */
-public class OrderProduct implements Entity {
+public class OrderedProduct implements Entity {
 
     /** Ordered product ID */
     private int id;
@@ -30,15 +30,23 @@ public class OrderProduct implements Entity {
     private int productQuantity;
 
     // Description of constructors for the class
-    public OrderProduct() {
+    public OrderedProduct() {
     }
 
-    public OrderProduct(int id, int orderId, int productId, BigDecimal productPrice, int productQuantity) {
-        this.id = id;
+    public OrderedProduct(BigDecimal productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public OrderedProduct(int orderId, int productId, BigDecimal productPrice, int productQuantity) {
+        this(productPrice);
         this.orderId = orderId;
         this.productId = productId;
-        this.productPrice = productPrice;
         this.productQuantity = productQuantity;
+    }
+
+    public OrderedProduct(int id, int orderId, int productId, BigDecimal productPrice, int productQuantity) {
+        this(orderId, productId, productPrice, productQuantity);
+        this.id = id;
     }
 
     // Getters and setters for class fields
@@ -96,10 +104,10 @@ public class OrderProduct implements Entity {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        OrderProduct that = (OrderProduct) obj;
-        return id == that.id &&
-                orderId == that.orderId &&
+        OrderedProduct that = (OrderedProduct) obj;
+        return orderId == that.orderId &&
                 productId == that.productId &&
+                productQuantity == that.productQuantity &&
                 Objects.equals(productPrice, that.productPrice);
     }
 
@@ -110,7 +118,7 @@ public class OrderProduct implements Entity {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, orderId, productId, productPrice);
+        return Objects.hash(orderId, productId, productPrice, productQuantity);
     }
 
     /**
@@ -120,7 +128,7 @@ public class OrderProduct implements Entity {
      */
     @Override
     public String toString() {
-        return "OrderProduct{" +
+        return "OrderedProduct{" +
                 "id=" + id +
                 ", orderId=" + orderId +
                 ", productId=" + productId +

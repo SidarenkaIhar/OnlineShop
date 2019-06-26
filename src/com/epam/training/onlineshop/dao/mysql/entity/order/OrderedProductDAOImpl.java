@@ -1,7 +1,7 @@
 package com.epam.training.onlineshop.dao.mysql.entity.order;
 
 import com.epam.training.onlineshop.dao.AbstractDAO;
-import com.epam.training.onlineshop.entity.order.OrderProduct;
+import com.epam.training.onlineshop.entity.order.OrderedProduct;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,10 +19,10 @@ import static com.epam.training.onlineshop.dao.mysql.MysqlConnectionPool.getInst
  * @author Ihar Sidarenka
  * @version 0.1 23-Apr-19
  */
-public class OrderProductDAOImpl extends AbstractDAO<OrderProduct> {
+public class OrderedProductDAOImpl extends AbstractDAO<OrderedProduct> {
 
     /*  List of ordered products found on request in the database */
-    private List<OrderProduct> products;
+    private List<OrderedProduct> products;
 
     /**
      * Adding a new ordered product to the database
@@ -33,7 +33,7 @@ public class OrderProductDAOImpl extends AbstractDAO<OrderProduct> {
      * otherwise returns {@code false}
      */
     @Override
-    public boolean addNew(OrderProduct product) {
+    public boolean addNew(OrderedProduct product) {
         return getInstance().executeDatabaseQuery(INSERT, this, product, MYSQL_INSERT_NEW_ORDER_PRODUCT);
     }
 
@@ -45,7 +45,7 @@ public class OrderProductDAOImpl extends AbstractDAO<OrderProduct> {
      * @return list of found ordered products
      */
     @Override
-    public List<OrderProduct> find(OrderProduct product) {
+    public List<OrderedProduct> find(OrderedProduct product) {
         return findOrderProduct(MYSQL_SELECT_ORDER_PRODUCT + product.getId());
     }
 
@@ -55,7 +55,7 @@ public class OrderProductDAOImpl extends AbstractDAO<OrderProduct> {
      * @return list of found ordered products
      */
     @Override
-    public List<OrderProduct> findAll() {
+    public List<OrderedProduct> findAll() {
         return findOrderProduct(MYSQL_SELECT_ALL_ORDER_PRODUCTS);
     }
 
@@ -68,7 +68,7 @@ public class OrderProductDAOImpl extends AbstractDAO<OrderProduct> {
      *
      * @return returns a list of all ordered products found
      */
-    private List<OrderProduct> findOrderProduct(String sql) {
+    private List<OrderedProduct> findOrderProduct(String sql) {
         products = new ArrayList<>();
         getInstance().executeDatabaseQuery(SELECT, this, null, sql);
         return products;
@@ -83,7 +83,7 @@ public class OrderProductDAOImpl extends AbstractDAO<OrderProduct> {
      * otherwise returns {@code false}
      */
     @Override
-    public boolean update(OrderProduct product) {
+    public boolean update(OrderedProduct product) {
         return getInstance().executeDatabaseQuery(UPDATE, this, product, MYSQL_UPDATE_ORDER_PRODUCT);
     }
 
@@ -96,7 +96,7 @@ public class OrderProductDAOImpl extends AbstractDAO<OrderProduct> {
      * otherwise returns {@code false}
      */
     @Override
-    public boolean delete(OrderProduct product) {
+    public boolean delete(OrderedProduct product) {
         return getInstance().executeDatabaseQuery(DELETE, this, product, MYSQL_DELETE_ORDER_PRODUCT);
     }
 
@@ -114,13 +114,13 @@ public class OrderProductDAOImpl extends AbstractDAO<OrderProduct> {
     public boolean addFoundEntities(ResultSet resultSet) throws SQLException {
         boolean successful = false;
         while (resultSet.next()) {
-            OrderProduct newOrderProduct = new OrderProduct();
-            newOrderProduct.setId(resultSet.getInt("product_id"));
-            newOrderProduct.setOrderId(resultSet.getInt("order_id"));
-            newOrderProduct.setProductId(resultSet.getInt("product_id"));
-            newOrderProduct.setProductPrice(resultSet.getBigDecimal("price"));
-            newOrderProduct.setProductQuantity(resultSet.getInt("quantity"));
-            products.add(newOrderProduct);
+            OrderedProduct newOrderedProduct = new OrderedProduct();
+            newOrderedProduct.setId(resultSet.getInt("ordered_product_id"));
+            newOrderedProduct.setOrderId(resultSet.getInt("order_id"));
+            newOrderedProduct.setProductId(resultSet.getInt("product_id"));
+            newOrderedProduct.setProductPrice(resultSet.getBigDecimal("price"));
+            newOrderedProduct.setProductQuantity(resultSet.getInt("quantity"));
+            products.add(newOrderedProduct);
             successful = true;
         }
         return successful;
@@ -140,7 +140,7 @@ public class OrderProductDAOImpl extends AbstractDAO<OrderProduct> {
      *                      the database
      */
     @Override
-    public boolean executeInsertRequest(PreparedStatement preparedStatement, OrderProduct product) throws SQLException {
+    public boolean executeInsertRequest(PreparedStatement preparedStatement, OrderedProduct product) throws SQLException {
         preparedStatement.setInt(1, product.getOrderId());
         preparedStatement.setInt(2, product.getProductId());
         preparedStatement.setBigDecimal(3, product.getProductPrice());
@@ -162,7 +162,7 @@ public class OrderProductDAOImpl extends AbstractDAO<OrderProduct> {
      *                      the database
      */
     @Override
-    public boolean executeUpdateRequest(PreparedStatement preparedStatement, OrderProduct product) throws SQLException {
+    public boolean executeUpdateRequest(PreparedStatement preparedStatement, OrderedProduct product) throws SQLException {
         preparedStatement.setInt(5, product.getId());
         return executeInsertRequest(preparedStatement, product);
     }
@@ -181,7 +181,7 @@ public class OrderProductDAOImpl extends AbstractDAO<OrderProduct> {
      *                      the database
      */
     @Override
-    public boolean executeDeleteRequest(PreparedStatement preparedStatement, OrderProduct product) throws SQLException {
+    public boolean executeDeleteRequest(PreparedStatement preparedStatement, OrderedProduct product) throws SQLException {
         preparedStatement.setInt(1, product.getId());
         return preparedStatement.executeUpdate() > 0;
     }
