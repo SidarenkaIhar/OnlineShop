@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Register a new user</title>
+    <script src="/js/common.js"></script>
+    <script src="/js/validator.js"></script>
+    <link rel="stylesheet" href="/css/stylesheet.css" type="text/css">
+    <link rel="stylesheet" href="/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="/css/user.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css">
+</head>
+<body onload="applyingParameters('/editUserServlet')">
+<nav id="top">
+    <div class="container">
+        <div class="pull-left">
+            <ul>
+                <li><i class="fa fa-phone"></i> <span class="hidden-xs hidden-sm hidden-md">+375 (22) 789-43-101</span></li>
+                <li><i class="fa fa-building-o"></i> <span class="hidden-xs hidden-sm hidden-md">246746, Kastryčnika Ave 48, Gomel</span></li>
+            </ul>
+        </div>
+        <div id="top-links" class="nav pull-right">
+            <ul class="list-inline">
+                <li><i class="fa fa-user"></i> <span class="hidden-xs hidden-sm hidden-md" id="userLogin"><a href="/html/login.html" title="Log In">Log In</a></span></li>
+                <li><a href="/html/cart.html" title="Shopping Cart"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Shopping Cart</span></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <div id="logo"><h1><a href="/">Online Shop</a></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container">
+    <nav id="menu" class="navbar">
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav" id="userMenu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/html/cart.html" title="Shopping Cart">Shopping Cart</a></li>
+                <li><a href="/#" title="Information">Information</a></li>
+                <li><a href="/#" title="Privacy Policy">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div id="container">
+    <div id="content">
+        <div class="page-header">
+            <div class="container-fluid">
+                <div class="pull-right">
+                    <a href="/" data-toggle="tooltip" title="Home" class="btn btn-primary"><i class="fa fa-home"></i></a>
+                    <button type="button" data-toggle="tooltip" title="Register a new user" class="btn btn-primary" onclick="saveEntity('/editUserServlet')"><i class="fa fa-save"></i></button>
+                    <a href="/html/login.html" data-toggle="tooltip" title="Log In" class="btn btn-success"><i class="fa fa-user"></i></a>
+                </div>
+                <h1 id="welcome_message">Register a new user</h1>
+            </div>
+        </div>
+        <div id="messageFailed" class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i>
+            <div id="messageFailedText"></div>
+            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageFailed')">&times;</button>
+        </div>
+        <div id="messageSuccess" class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i>
+            <div id="messageSuccessText"></div>
+            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageSuccess')">&times;</button>
+        </div>
+        <div class="container-fluid">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>User data</h3>
+                </div>
+                <div class="panel-body">
+                    <form id="form-entity" class="form-horizontal">
+                        <div class="col-sm-10">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab-user">
+                                    <fieldset>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">Name</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="name" value="" placeholder="Name" id="entity_name" class="form-control" maxlength="128"/>
+                                                <div id="entity_name_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">Password</label>
+                                            <div class="col-sm-10">
+                                                <input type="password" name="password" value="" placeholder="Password" id="entity_password" class="form-control" autocomplete="off" maxlength="128"/>
+                                                <div id="entity_password_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">Confirm Password</label>
+                                            <div class="col-sm-10">
+                                                <input type="password" name="confirm" value="" placeholder="Confirm Password" id="entity_confirm" class="form-control" autocomplete="off" maxlength="128"/>
+                                                <div id="entity_confirm_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">E-Mail</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="email" value="" placeholder="E-Mail" id="entity_email" class="form-control" maxlength="128"/>
+                                                <div id="entity_email_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="id" id="entity_id" value="-1">
+                        <input type="hidden" name="creationDate" id="entity_creationDate" value="Jan 1, 2000 5:55:55 PM">
+                        <div id="userGroups"></div>
+                        <input type="hidden" name="isEnabled" id="entity_isEnabled" value="true">
+                    </form>
+                    <input type="hidden" name="typeOperation" id="typeOperation" value="">
+                    <input type="hidden" name="entitiesToEdit" id="entitiesToEdit" value="">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <h5>Information</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Delivery Information</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Privacy Policy</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Terms &amp; Conditions</h5>
+            </div>
+        </div>
+        <hr>
+        <p>Online Shop © 2019</p>
+    </div>
+</footer>
+</body>
+</html>

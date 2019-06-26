@@ -1,0 +1,101 @@
+<html dir="ltr" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Online Shop</title>
+    <meta name="description" content="My Store">
+    <link rel="stylesheet" href="/css/stylesheet.css" type="text/css">
+    <link rel="stylesheet" href="/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css">
+</head>
+<body>
+<nav id="top">
+    <div class="container">
+        <div class="pull-left">
+            <ul>
+                <li><i class="fa fa-phone"></i> <span class="hidden-xs hidden-sm hidden-md">+375 (22) 789-43-101</span></li>
+                <li><i class="fa fa-building-o"></i> <span class="hidden-xs hidden-sm hidden-md">246746, Kastryčnika Ave 48, Gomel</span></li>
+            </ul>
+        </div>
+        <div id="top-links" class="nav pull-right">
+            <ul class="list-inline">
+                <li><a href="/html/cart.html" title="Shopping Cart"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Shopping Cart</span></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <div id="logo"><h1><a href="/">Online Shop</a></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container">
+    <nav id="menu" class="navbar">
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav" id="userMenu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/html/cart.html" title="Shopping Cart">Shopping Cart</a></li>
+                <li><a href="/#" title="Information">Information</a></li>
+                <li><a href="/#" title="Privacy Policy">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div id="common-home" class="container">
+    <div class="row">
+        <div id="content" class="col-sm-12">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="well">
+                        <h2>New Customer</h2>
+                        <p><strong>Register</strong></p>
+                        <p>By creating an account you will be able to shop faster, be up to date on an order's status, and keep track of the orders you have previously made.</p>
+                        <a href="/html/newuser.html" class="btn btn-primary">Continue</a></div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="well">
+                        <h2>Returning Customer</h2>
+                        <p><strong>I am a returning customer</strong></p>
+                        <form action="/loginServlet" method="post">
+                            <div class="form-group">
+                                <label class="control-label" for="user_email">E-Mail Address</label>
+                                <input type="text" name="user_email" value="" placeholder="E-Mail" id="user_email" class="form-control" maxlength="128"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="user_password">Password</label>
+                                <input type="password" name="user_password" value="" placeholder="Password" id="user_password" class="form-control" maxlength="128"/>
+                                <input type="submit" value="Login" class="btn btn-primary">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <h5>Information</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Delivery Information</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Privacy Policy</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Terms &amp; Conditions</h5>
+            </div>
+        </div>
+        <hr>
+        <p>Online Shop © 2019</p>
+    </div>
+</footer>
+</body>
+</html>

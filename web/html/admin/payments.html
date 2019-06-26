@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>List of payments</title>
+    <script src="/js/common.js"></script>
+    <link rel="stylesheet" href="/css/stylesheet.css" type="text/css">
+    <link rel="stylesheet" href="/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css">
+</head>
+<body onload="postServletJSON('/showPaymentsServlet')">
+<div class="container">
+    <nav id="menu" class="navbar">
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav" id="userMenu">
+                <li><a href="/">Home</a></li>
+                <li class="dropdown"><a href="/html/admin/carts.html" class="dropdown-toggle" data-toggle="dropdown">Cart</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/carts.html">Show all</a></li>
+                                <li><a href="/html/admin/editcart.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/orders.html" class="dropdown-toggle" data-toggle="dropdown">Order</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/orders.html">Show all</a></li>
+                                <li><a href="/html/admin/editorder.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/orderedproducts.html" class="dropdown-toggle" data-toggle="dropdown">Ordered Product</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/orderedproducts.html">Show all</a></li>
+                                <li><a href="/html/admin/editorderedproduct.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/payments.html" class="dropdown-toggle" data-toggle="dropdown">Payment</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/payments.html">Show all</a></li>
+                                <li><a href="/html/admin/editpayment.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/products.html" class="dropdown-toggle" data-toggle="dropdown">Product</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/products.html">Show all</a></li>
+                                <li><a href="/html/admin/editproduct.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/users.html" class="dropdown-toggle" data-toggle="dropdown">User</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/users.html">Show all</a></li>
+                                <li><a href="/html/admin/edituser.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div id="container">
+    <div id="content">
+        <div class="page-header">
+            <div class="container-fluid">
+                <div class="pull-right">
+                    <a href="/" data-toggle="tooltip" title="Home" class="btn btn-primary"><i class="fa fa-home"></i></a>
+                    <a href="/html/admin/editpayment.html" data-toggle="tooltip" title="Add new payment" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                    <button type="button" data-toggle="tooltip" title="Remove selected payments" class="btn btn-danger"
+                            onclick="confirm('Do you really want to delete the selected payments?') ? deleteEntities('/showPaymentsServlet') : false;"><i class="fa fa-trash-o"></i></button>
+                </div>
+                <h1>List of payments of the online shop</h1>
+            </div>
+        </div>
+        <div id="messageFailed" class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i>
+            <div id="messageFailedText"></div>
+            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageFailed')">&times;</button>
+        </div>
+        <div id="messageSuccess" class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i>
+            <div id="messageSuccessText"></div>
+            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageSuccess')">&times;</button>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-list"></i>Editable payments</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <form id="form-deleteEntity">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <td class="text-center"> Select</td>
+                                <td class="text-left"> Payment Id</td>
+                                <td class="text-left"> User Id</td>
+                                <td class="text-left"> First Name</td>
+                                <td class="text-left"> Last Name</td>
+                                <td class="text-left"> Post code</td>
+                                <td class="text-left"> Address</td>
+                                <td class="text-left"> City</td>
+                                <td class="text-left"> Country</td>
+                                <td class="text-left"> Region</td>
+                                <td class="text-left"> Creation Date</td>
+                                <td class="text-center"> Action</td>
+                            </tr>
+                            </thead>
+                            <tbody id="allEntitiesList">
+                            </tbody>
+                        </table>
+                    </form>
+                    <form action="/html/admin/editpayment.html" method="get" id="form-editEntity">
+                        <input type="hidden" name="typeOperation" id="typeOperation" value="SELECT">
+                        <input type="hidden" name="entitiesToEdit" id="entitiesToEdit" value="">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

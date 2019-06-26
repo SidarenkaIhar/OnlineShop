@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Edit the parameters of the payment</title>
+    <script src="/js/common.js"></script>
+    <script src="/js/validator.js"></script>
+    <link rel="stylesheet" href="/css/stylesheet.css" type="text/css">
+    <link rel="stylesheet" href="/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css">
+</head>
+<body onload="applyingParameters('/editPaymentServlet')">
+<div class="container">
+    <nav id="menu" class="navbar">
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav" id="userMenu">
+                <li><a href="/">Home</a></li>
+                <li class="dropdown"><a href="/html/admin/carts.html" class="dropdown-toggle" data-toggle="dropdown">Cart</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/carts.html">Show all</a></li>
+                                <li><a href="/html/admin/editcart.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/orders.html" class="dropdown-toggle" data-toggle="dropdown">Order</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/orders.html">Show all</a></li>
+                                <li><a href="/html/admin/editorder.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/orderedproducts.html" class="dropdown-toggle" data-toggle="dropdown">Ordered Product</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/orderedproducts.html">Show all</a></li>
+                                <li><a href="/html/admin/editorderedproduct.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/payments.html" class="dropdown-toggle" data-toggle="dropdown">Payment</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/payments.html">Show all</a></li>
+                                <li><a href="/html/admin/editpayment.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/products.html" class="dropdown-toggle" data-toggle="dropdown">Product</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/products.html">Show all</a></li>
+                                <li><a href="/html/admin/editproduct.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/admin/users.html" class="dropdown-toggle" data-toggle="dropdown">User</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/admin/users.html">Show all</a></li>
+                                <li><a href="/html/admin/edituser.html">Add new</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div id="container">
+    <div id="content">
+        <div class="page-header">
+            <div class="container-fluid">
+                <div class="pull-right">
+                    <a href="/" data-toggle="tooltip" title="Home" class="btn btn-primary"><i class="fa fa-home"></i></a>
+                    <button type="button" data-toggle="tooltip" title="Save" class="btn btn-primary" onclick="saveEntity('/editPaymentServlet')"><i class="fa fa-save"></i></button>
+                    <a href="/html/admin/payments.html" data-toggle="tooltip" title="Back" class="btn btn-default"><i class="fa fa-reply"></i></a>
+                </div>
+                <h1 id="welcome_message">Add new payment</h1>
+            </div>
+        </div>
+        <div id="messageFailed" class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i>
+            <div id="messageFailedText"></div>
+            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageFailed')">&times;</button>
+        </div>
+        <div id="messageSuccess" class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i>
+            <div id="messageSuccessText"></div>
+            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageSuccess')">&times;</button>
+        </div>
+        <div class="container-fluid">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>Edit Payment</h3>
+                </div>
+                <div class="panel-body">
+                    <form id="form-entity" class="form-horizontal">
+                        <div class="col-sm-10">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab-payment">
+                                    <fieldset>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">First Name</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="string" value="" placeholder="First Name" id="entity_firstName" class="form-control" maxlength="128"/>
+                                                <div id="entity_firstName_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">Last Name</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="string" value="" placeholder="Last Name" id="entity_lastName" class="form-control" maxlength="128"/>
+                                                <div id="entity_lastName_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">Postcode</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="integer" value="" placeholder="Postcode" id="entity_postcode" class="form-control" maxlength="10"/>
+                                                <div id="entity_postcode_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">Address</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="string" value="" placeholder="Address" id="entity_address" class="form-control" maxlength="128"/>
+                                                <div id="entity_address_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">City</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="string" value="" placeholder="City" id="entity_city" class="form-control" maxlength="128"/>
+                                                <div id="entity_city_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">Country</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="string" value="" placeholder="Country" id="entity_country" class="form-control" maxlength="128"/>
+                                                <div id="entity_country_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">Region</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="string" value="" placeholder="Region" id="entity_region" class="form-control" maxlength="128"/>
+                                                <div id="entity_region_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="id" id="entity_id" value="-1">
+                        <input type="hidden" name="userId" id="entity_userId" value="-1">
+                        <input type="hidden" name="creationDate" id="entity_creationDate" value="Jan 1, 2000 5:55:55 PM">
+                    </form>
+                    <input type="hidden" name="typeOperation" id="typeOperation" value="">
+                    <input type="hidden" name="entitiesToEdit" id="entitiesToEdit" value="">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
