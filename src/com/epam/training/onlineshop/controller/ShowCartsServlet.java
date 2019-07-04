@@ -1,8 +1,8 @@
 package com.epam.training.onlineshop.controller;
 
+import com.epam.training.onlineshop.configuration.MessagesManager;
 import com.epam.training.onlineshop.dao.AbstractDAO;
 import com.epam.training.onlineshop.dao.DAOFactory;
-import com.epam.training.onlineshop.entity.catalog.Product;
 import com.epam.training.onlineshop.entity.order.ShoppingCart;
 import com.epam.training.onlineshop.entity.user.User;
 import com.epam.training.onlineshop.entity.user.UserGroup;
@@ -14,13 +14,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import static com.epam.training.onlineshop.configuration.Messages.*;
 import static com.epam.training.onlineshop.dao.DAOFactory.MYSQL;
 import static com.epam.training.onlineshop.dao.DAOFactory.getDAOFactory;
 import static com.epam.training.onlineshop.dao.StatementType.SELECT;
@@ -37,20 +39,16 @@ public class ShowCartsServlet extends HttpServlet {
     /* Working with carts in database */
     private AbstractDAO<ShoppingCart> cartDAO;
 
-    /* Working with products in database */
-    private AbstractDAO<Product> productDAO;
-
     public void init() {
         DAOFactory mysqlFactory = getDAOFactory(MYSQL);
         cartDAO = mysqlFactory.getShoppingCartDAO();
-        productDAO = mysqlFactory.getProductDAO();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession();
-        User authorizedUser = (User) session.getAttribute("User");
+        User authorizedUser = LoginServlet.getAuthorizedUser(request);
+        Locale locale = LoginServlet.getUserLocale(request);
 
-        String respJson = handleRequest(request, authorizedUser);
+        String respJson = handleRequest(request, authorizedUser, locale);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -71,15 +69,14 @@ public class ShowCartsServlet extends HttpServlet {
      *
      * @throws IOException I/O exception of some sort has occurred
      */
-    private String handleRequest(HttpServletRequest request, User authorizedUser) throws IOException {
+    private String handleRequest(HttpServletRequest request, User authorizedUser, Locale locale) throws IOException {
         Gson gson = new Gson();
         String messageSuccess = "";
         String messageFailed = "";
         List<ShoppingCart> userCart = null;
         List<ShoppingCart> carts = cartDAO.findAll();
-        List<Product> products = productDAO.findAll();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
         String json = br.readLine();
         if (json != null) {
             CartJsonDataPackage requestJson = gson.fromJson(json, CartJsonDataPackage.class);
@@ -92,12 +89,11 @@ public class ShowCartsServlet extends HttpServlet {
                     for (ShoppingCart cart : carts) {
                         if (validator.getNumber(cartId, -1) == cart.getId()) {
                             boolean isSuccessfully = cartDAO.delete(cart);
+                            String name = cart.getProductName();
                             if (isSuccessfully) {
-                                success.append("The product ").append(getProductNameById(products, cart.getProductId()))
-                                        .append(" is successfully deleted. <br>");
+                                success.append(name).append(MessagesManager.getMessage(ENTITY_SUCCESSFULLY_DELETED, locale));
                             } else {
-                                failed.append("The product ").append(getProductNameById(products, cart.getProductId()))
-                                        .append(" was not deleted. <br>");
+                                failed.append(name).append(MessagesManager.getMessage(ENTITY_NOT_DELETED, locale));
                             }
                         }
                     }
@@ -105,7 +101,7 @@ public class ShowCartsServlet extends HttpServlet {
                 messageSuccess = success.length() > 0 ? success.toString() : "";
                 messageFailed = failed.length() > 0 ? failed.toString() : "";
             } else {
-                messageFailed = "You must select at least one cart!";
+                messageFailed = MessagesManager.getMessage(NOTHING_SELECTED_TO_DELETE, locale);
             }
         }
         carts = cartDAO.findAll();
@@ -121,25 +117,7 @@ public class ShowCartsServlet extends HttpServlet {
             carts = null;
         }
 
-        CartJsonDataPackage responseJson = new CartJsonDataPackage(carts, userCart, products, messageSuccess,
-                                                                   messageFailed, SELECT);
+        CartJsonDataPackage responseJson = new CartJsonDataPackage(carts, userCart, messageSuccess, messageFailed, SELECT);
         return gson.toJson(responseJson);
-    }
-
-    /**
-     * Returns the name of the product by its ID
-     *
-     * @param products all products of the online store
-     * @param id       id of the product whose name you need to find
-     *
-     * @return product name
-     */
-    private String getProductNameById(List<Product> products, int id) {
-        for (Product product : products) {
-            if (product.getId() == id) {
-                return product.getName();
-            }
-        }
-        return "";
     }
 }

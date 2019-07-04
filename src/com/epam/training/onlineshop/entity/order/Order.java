@@ -24,6 +24,9 @@ public class Order implements Entity {
     /** ID number of the customer who created the order */
     private int userId;
 
+    /** Customer name who created the order */
+    private String userName;
+
     /** Cost of products in the order */
     private BigDecimal amount;
 
@@ -83,6 +86,14 @@ public class Order implements Entity {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public BigDecimal getAmount() {

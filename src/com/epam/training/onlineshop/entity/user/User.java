@@ -5,6 +5,7 @@ import com.epam.training.onlineshop.entity.Entity;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import static com.epam.training.onlineshop.entity.user.UserGroup.CUSTOMER;
@@ -34,6 +35,9 @@ public class User implements Entity {
     /** User Email */
     private String email;
 
+    /** User locale */
+    private Locale locale;
+
     /** The status of user, active or blocked (placed in the "black list") */
     private boolean isEnabled;
 
@@ -43,6 +47,7 @@ public class User implements Entity {
     // Description of constructors for the class
     public User() {
         this.group = CUSTOMER;
+        this.locale = Locale.US;
         this.creationDate = new Timestamp(new Date().getTime());
     }
 
@@ -54,14 +59,15 @@ public class User implements Entity {
         this.isEnabled = true;
     }
 
-    public User(UserGroup group, String name, String password, String email, boolean isEnabled) {
+    public User(UserGroup group, String name, String password, String email, Locale locale, boolean isEnabled) {
         this(name, password, email);
         this.group = group;
+        this.locale = locale;
         this.isEnabled = isEnabled;
     }
 
-    public User(int id, UserGroup group, String name, String password, String email, boolean isEnabled) {
-        this(group, name, password, email, isEnabled);
+    public User(int id, UserGroup group, String name, String password, String email, Locale locale, boolean isEnabled) {
+        this(group, name, password, email, locale, isEnabled);
         this.id = id;
     }
 
@@ -122,6 +128,18 @@ public class User implements Entity {
         this.email = email;
     }
 
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale.equalsIgnoreCase("ru_RU") ? new Locale("ru", "RU") : Locale.US;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
     public boolean isEnabled() {
         return isEnabled;
     }
@@ -161,7 +179,8 @@ public class User implements Entity {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         User user = (User) obj;
-        return Objects.equals(email, user.email);
+        return Arrays.equals(password, user.password) &&
+                Objects.equals(email, user.email);
     }
 
     /**
@@ -171,7 +190,9 @@ public class User implements Entity {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(email);
+        int result = Objects.hash(email);
+        result = 31 * result + Arrays.hashCode(password);
+        return result;
     }
 
     /**
@@ -187,6 +208,7 @@ public class User implements Entity {
                 ", name='" + name + '\'' +
                 ", password=" + Arrays.toString(password) +
                 ", email='" + email + '\'' +
+                ", locale=" + locale +
                 ", isEnabled=" + isEnabled +
                 ", creationDate=" + creationDate +
                 '}';

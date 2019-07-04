@@ -32,6 +32,15 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>ServletSecurityFilter</filter-name>
+        <url-pattern>/html/ru/admin/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ServletSecurityFilter</filter-name>
         <url-pattern>/controller</url-pattern>
     </filter-mapping>
+
+    <context-param>
+        <param-name>log4jConfiguration</param-name>
+        <param-value>resources/log4j2.properties</param-value>
+    </context-param>
 </web-app>

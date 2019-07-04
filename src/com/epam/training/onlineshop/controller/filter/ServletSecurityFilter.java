@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Responsible for the protection of the administrative part of the site from unauthorized access
@@ -33,7 +35,11 @@ public class ServletSecurityFilter implements Filter {
             dispatcher.forward(req, resp);
             return;
         } else if (user.getGroup() != UserGroup.ADMINISTRATOR) {
-            dispatcher = request.getServletContext().getRequestDispatcher("/");
+            if (user.getLocale().equals(Locale.US)) {
+                dispatcher = request.getServletContext().getRequestDispatcher("/");
+            } else {
+                dispatcher = request.getServletContext().getRequestDispatcher("/html/ru/index.html");
+            }
             dispatcher.forward(req, resp);
             return;
         }

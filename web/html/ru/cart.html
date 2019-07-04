@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Корзина покупок</title>
+    <script src="/js/common.js"></script>
+    <link rel="stylesheet" href="/css/stylesheet.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css">
+</head>
+<body onload="postServletJSON('/showCartsServlet')">
+<nav id="top">
+    <div class="container">
+        <div class="pull-left">
+            <ul>
+                <li><i class="fa fa-phone"></i> <span class="hidden-xs hidden-sm hidden-md">+375 (22) 789-43-101</span></li>
+                <li><i class="fa fa-building-o"></i> <span class="hidden-xs hidden-sm hidden-md">246746, пр-кт Октября 48, Гомель</span></li>
+            </ul>
+        </div>
+        <div id="top-links" class="nav pull-right">
+            <ul class="list-inline">
+                <li><i class="fa fa-user"></i> <span class="hidden-xs hidden-sm hidden-md" id="userLogin"><a href="/html/ru/login.html" title="Авторизироваться">Авторизироваться</a></span></li>
+                |
+                <li><a href="/html/ru/cart.html" title="Корзина покупок"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Корзина покупок</span></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <div id="logo"><h1><a href="/html/ru/index.html">Online Shop</a></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container">
+    <nav id="menu" class="navbar">
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav" id="userMenu">
+                <li><a href="/html/ru/index.html">Домой</a></li>
+                <li><a href="/html/ru/cart.html" title="Корзина покупок">Корзина покупок</a></li>
+                <li><a href="#" title="Информация">Информация</a></li>
+                <li><a href="#" title="Конфиденциальность">Конфиденциальность</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div id="container">
+    <div id="content">
+        <div class="page-header">
+            <div class="container-fluid">
+                <div class="pull-right">
+                    <a href="/html/ru/index.html" data-toggle="tooltip" title="Домой" class="btn btn-primary"><i class="fa fa-home"></i></a>
+                    <button type="button" data-toggle="tooltip" title="Заказать выбранные товары" class="btn btn-success"
+                            onclick="confirm('Вы действительно хотите заказать выбранные товары?') ? document.location.href = '/html/ru/payment.html' : false;"><i class="fa fa-cart-arrow-down"></i></button>
+                    <button type="button" data-toggle="tooltip" title="Удалить выбранные товары" class="btn btn-danger"
+                            onclick="confirm('Вы действительно хотите удалить выбранные товары?') ? deleteEntities('/showCartsServlet') : false;"><i class="fa fa-trash-o"></i></button>
+                </div>
+                <h1>Список товаров в вашей корзине покупок</h1>
+            </div>
+        </div>
+        <div id="messageFailed" class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i>
+            <div id="messageFailedText"></div>
+            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageFailed')">&times;</button>
+        </div>
+        <div id="messageSuccess" class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i>
+            <div id="messageSuccessText"></div>
+            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageSuccess')">&times;</button>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-list"></i>Список товаров</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <form id="form-deleteEntity">
+                        <table class="table table-bordered table-hover" id="user_cart">
+                            <thead>
+                            <tr>
+                                <td class="text-center"> Выбрать</td>
+                                <td class="text-left"></td>
+                                <td class="text-left"> Имя товара</td>
+                                <td class="text-left"> Цена товара $</td>
+                                <td class="text-left"> Количество товара</td>
+                                <td class="text-left"></td>
+                            </tr>
+                            </thead>
+                            <tbody id="allEntitiesList">
+                            </tbody>
+                        </table>
+                    </form>
+                    <form action="/html/ru/admin/editcart.html" method="get" id="form-editEntity">
+                        <input type="hidden" name="typeOperation" id="typeOperation" value="SELECT">
+                        <input type="hidden" name="entitiesToEdit" id="entitiesToEdit" value="">
+                    </form>
+                    <input type="hidden" name="id" id="user_id" value="-1">
+                    <input type="hidden" name="userLanguage" id="userLanguage" value="ru_RU">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <h5>Информация</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Информация О Доставке</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Конфиденциальность</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Условия гарантии</h5>
+            </div>
+        </div>
+        <hr>
+        <p>Online Shop © 2019</p>
+    </div>
+</footer>
+</body>
+</html>

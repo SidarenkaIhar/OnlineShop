@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Список пользователей магазина</title>
+    <script src="/js/common.js"></script>
+    <link rel="stylesheet" href="/css/stylesheet.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css">
+</head>
+<body onload="postServletJSON('/showUsersServlet')">
+<div class="container">
+    <nav id="menu" class="navbar">
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav" id="userMenu">
+                <li><a href="/html/ru/index.html">Домой</a></li>
+                <li class="dropdown"><a href="/html/ru/admin/carts.html" class="dropdown-toggle" data-toggle="dropdown">Корзина</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/carts.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editcart.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/orders.html" class="dropdown-toggle" data-toggle="dropdown">Заказ</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/orders.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editorder.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/orderedproducts.html" class="dropdown-toggle" data-toggle="dropdown">Заказанные товары</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/orderedproducts.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editorderedproduct.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/payments.html" class="dropdown-toggle" data-toggle="dropdown">Оплата</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/payments.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editpayment.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/products.html" class="dropdown-toggle" data-toggle="dropdown">Товар</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/products.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editproduct.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/users.html" class="dropdown-toggle" data-toggle="dropdown">Пользователь</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/users.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/edituser.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div id="container">
+    <div id="content">
+        <div class="page-header">
+            <div class="container-fluid">
+                <div class="pull-right">
+                    <a href="/html/ru/index.html" data-toggle="tooltip" title="Домой" class="btn btn-primary"><i class="fa fa-home"></i></a>
+                    <a href="/html/ru/admin/edituser.html" data-toggle="tooltip" title="Добавить нового пользователя" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                    <button type="button" data-toggle="tooltip" title="Удалить выбранных пользователей" class="btn btn-danger"
+                            onclick="confirm('Вы действительно хотите удалить выбранных пользователей') ? deleteEntities('/showUsersServlet') : false;"><i class="fa fa-trash-o"></i></button>
+                </div>
+                <h1>Список пользователей магазина</h1>
+            </div>
+        </div>
+        <div id="messageFailed" class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i>
+            <div id="messageFailedText"></div>
+            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageFailed')">&times;</button>
+        </div>
+        <div id="messageSuccess" class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i>
+            <div id="messageSuccessText"></div>
+            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageSuccess')">&times;</button>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-list"></i>Пользователи магазина</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <form id="form-deleteEntity">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <td class="text-center"> Выбрать</td>
+                                <td class="text-left"> Группа пользователя</td>
+                                <td class="text-left"> Имя пользователя</td>
+                                <td class="text-left"> Пароль</td>
+                                <td class="text-left"> Email</td>
+                                <td class="text-left"> Язык</td>
+                                <td class="text-left"> Активный</td>
+                                <td class="text-left"> Дата добавления</td>
+                                <td class="text-center"> Действия</td>
+                            </tr>
+                            </thead>
+                            <tbody id="allEntitiesList">
+                            </tbody>
+                        </table>
+                    </form>
+                    <form action="/html/ru/admin/edituser.html" method="get" id="form-editEntity">
+                        <input type="hidden" name="typeOperation" id="typeOperation" value="SELECT">
+                        <input type="hidden" name="entitiesToEdit" id="entitiesToEdit" value="">
+                    </form>
+                    <input type="hidden" name="userLanguage" id="userLanguage" value="ru_RU">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

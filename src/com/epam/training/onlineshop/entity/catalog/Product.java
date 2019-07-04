@@ -31,6 +31,9 @@ public class Product implements Entity {
     /** Product category ID */
     private int categoryId;
 
+    /** Product category name */
+    private String categoryName;
+
     /** Product price */
     private BigDecimal price;
 
@@ -115,6 +118,14 @@ public class Product implements Entity {
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public BigDecimal getPrice() {

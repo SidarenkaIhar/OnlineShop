@@ -1,5 +1,6 @@
 package com.epam.training.onlineshop.controller;
 
+import com.epam.training.onlineshop.configuration.MessagesManager;
 import com.epam.training.onlineshop.dao.AbstractDAO;
 import com.epam.training.onlineshop.dao.DAOFactory;
 import com.epam.training.onlineshop.dao.StatementType;
@@ -16,8 +17,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Locale;
 
+import static com.epam.training.onlineshop.configuration.Messages.*;
 import static com.epam.training.onlineshop.dao.DAOFactory.MYSQL;
 import static com.epam.training.onlineshop.dao.DAOFactory.getDAOFactory;
 import static com.epam.training.onlineshop.dao.StatementType.*;
@@ -44,10 +48,11 @@ public class EditCartServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+        Locale locale = LoginServlet.getUserLocale(request);
+        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
         String json = br.readLine();
 
-        String respJson = handleRequest(json);
+        String respJson = handleRequest(json, locale);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -61,11 +66,12 @@ public class EditCartServlet extends HttpServlet {
     /**
      * Processes the request from the page to the server and generates the server's response to the page
      *
-     * @param json request from the page to the server
+     * @param json   request from the page to the server
+     * @param locale language for displaying messages to the user
      *
      * @return the server's response to the page
      */
-    private String handleRequest(String json) {
+    private String handleRequest(String json, Locale locale) {
         Gson gson = new Gson();
         List<ShoppingCart> carts = cartDAO.findAll();
         ShoppingCart editableCart = null;
@@ -84,9 +90,9 @@ public class EditCartServlet extends HttpServlet {
                         cart.setProductQuantity(cart.getProductQuantity() + editableCart.getProductQuantity());
                         boolean isSuccessfully = cartDAO.update(cart);
                         if (isSuccessfully) {
-                            messageSuccess = "The product worth $" + cart.getProductPrice() + " successfully added to the shopping cart #" + cart.getId();
+                            messageSuccess = cart.getProductName() + MessagesManager.getMessage(ADDED_TO_CART, locale);
                         } else {
-                            messageFailed = "The product worth $" + cart.getProductPrice() + " is not added to the shopping cart #" + cart.getId();
+                            messageFailed = cart.getProductName() + MessagesManager.getMessage(NOT_ADDED_TO_CART, locale);
                         }
                         break;
                     }
@@ -94,10 +100,10 @@ public class EditCartServlet extends HttpServlet {
                 if (!isExist) {
                     boolean isSuccessfully = cartDAO.addNew(editableCart);
                     if (isSuccessfully) {
-                        messageSuccess = "New cart added successfully!";
+                        messageSuccess = MessagesManager.getMessage(ENTITY_ADDED_SUCCESSFULLY, locale);
                         editableCart = new ShoppingCart(new BigDecimal(0));
                     } else {
-                        messageFailed = "New cart is not added to the database!";
+                        messageFailed = MessagesManager.getMessage(ENTITY_NOT_ADDED, locale);
                     }
                 }
             } else if (requestJson.getTypeOperation() == SELECT) {
@@ -115,14 +121,14 @@ public class EditCartServlet extends HttpServlet {
                 typeOperation = UPDATE;
                 boolean isSuccessfully = cartDAO.update(editableCart);
                 if (isSuccessfully) {
-                    messageSuccess = "The Cart #" + editableCart.getId() + " is successfully updated!";
+                    messageSuccess = "#" + editableCart.getId() + MessagesManager.getMessage(ENTITY_SUCCESSFULLY_UPDATED, locale);
                 } else {
-                    messageFailed = "The Cart #" + editableCart.getId() + " is not updated in the database!";
+                    messageFailed = "#" + editableCart.getId() + MessagesManager.getMessage(ENTITY_NOT_UPDATED, locale);
                 }
             }
         }
 
-        CartJsonDataPackage responseJson = new CartJsonDataPackage(null, null, null, null, editableCart, messageSuccess, messageFailed, typeOperation);
+        CartJsonDataPackage responseJson = new CartJsonDataPackage(editableCart, messageSuccess, messageFailed, typeOperation);
 
         return gson.toJson(responseJson);
     }

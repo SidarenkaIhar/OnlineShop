@@ -5,7 +5,6 @@
     <title>List of payments</title>
     <script src="/js/common.js"></script>
     <link rel="stylesheet" href="/css/stylesheet.css" type="text/css">
-    <link rel="stylesheet" href="/css/bootstrap.css" type="text/css">
     <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css">
 </head>
 <body onload="postServletJSON('/showPaymentsServlet')">
@@ -84,7 +83,6 @@
             <div class="container-fluid">
                 <div class="pull-right">
                     <a href="/" data-toggle="tooltip" title="Home" class="btn btn-primary"><i class="fa fa-home"></i></a>
-                    <a href="/html/admin/editpayment.html" data-toggle="tooltip" title="Add new payment" class="btn btn-primary"><i class="fa fa-plus"></i></a>
                     <button type="button" data-toggle="tooltip" title="Remove selected payments" class="btn btn-danger"
                             onclick="confirm('Do you really want to delete the selected payments?') ? deleteEntities('/showPaymentsServlet') : false;"><i class="fa fa-trash-o"></i></button>
                 </div>
@@ -110,8 +108,6 @@
                             <thead>
                             <tr>
                                 <td class="text-center"> Select</td>
-                                <td class="text-left"> Payment Id</td>
-                                <td class="text-left"> User Id</td>
                                 <td class="text-left"> First Name</td>
                                 <td class="text-left"> Last Name</td>
                                 <td class="text-left"> Post code</td>
@@ -131,6 +127,7 @@
                         <input type="hidden" name="typeOperation" id="typeOperation" value="SELECT">
                         <input type="hidden" name="entitiesToEdit" id="entitiesToEdit" value="">
                     </form>
+                    <input type="hidden" name="userLanguage" id="userLanguage" value="en_US">
                 </div>
             </div>
         </div>

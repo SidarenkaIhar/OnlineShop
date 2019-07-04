@@ -119,6 +119,7 @@ public class ProductDAOImpl extends AbstractDAO<Product> {
             newProduct.setDescription(resultSet.getString("description"));
             newProduct.setManufacturer(resultSet.getString("manufacturer"));
             newProduct.setCategoryId(resultSet.getInt("category_id"));
+            newProduct.setCategoryName(resultSet.getString("category_name"));
             newProduct.setPrice(resultSet.getBigDecimal("price"));
             newProduct.setQuantity(resultSet.getInt("quantity"));
             newProduct.setImage(resultSet.getString("image"));

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import static com.epam.training.onlineshop.dao.DAOFactory.MYSQL;
 import static com.epam.training.onlineshop.dao.DAOFactory.getDAOFactory;
@@ -39,22 +40,41 @@ public class LoginServlet extends HttpServlet {
 
         String userEmail = getParameter(request, "user_email");
         String userPassword = getParameter(request, "user_password");
+        String userLanguage = getParameter(request, "userLanguage");
         User guest = new User("", userPassword, userEmail);
+        guest.setLocale(userLanguage);
 
         for (User user : users) {
             if (user.equals(guest)) {
+                if (!user.getLocale().equals(guest.getLocale())) {
+                    user.setLocale(userLanguage);
+                    userDAO.update(user);
+                }
                 session.setAttribute("User", user);
-                response.sendRedirect("/");
+                if (Locale.US.equals(user.getLocale())) {
+                    response.sendRedirect("/");
+                } else {
+                    response.sendRedirect("/html/ru/index.html");
+                }
                 return;
             }
         }
-        request.getRequestDispatcher("/html/login.html").forward(request, response);
+        if (Locale.US.equals(guest.getLocale())) {
+            request.getRequestDispatcher("/html/login.html").forward(request, response);
+        } else {
+            request.getRequestDispatcher("/html/ru/login.html").forward(request, response);
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
+        User user =  (User) session.getAttribute("User");
         session.setAttribute("User", null);
-        response.sendRedirect("/html/login.html");
+        if (Locale.US.equals(user.getLocale())) {
+            response.sendRedirect("/html/login.html");
+        } else {
+            response.sendRedirect("/html/ru/login.html");
+        }
     }
 
     /**
@@ -69,5 +89,29 @@ public class LoginServlet extends HttpServlet {
         String parameterValue = request.getParameter(parameter);
         boolean isEmpty = parameterValue == null || parameterValue.isEmpty();
         return isEmpty ? "" : parameterValue;
+    }
+
+    /**
+     * Returns an authorized store user
+     *
+     * @param request   request to server with parameters
+     *
+     * @return authorized user
+     */
+    static User getAuthorizedUser(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        return (User) session.getAttribute("User");
+    }
+
+    /**
+     * Get the language of the authorized user
+     *
+     * @param request   request to server with parameters
+     *
+     * @return user locale
+     */
+    static Locale getUserLocale(HttpServletRequest request) {
+        User authorizedUser = getAuthorizedUser(request);
+        return authorizedUser == null ? Locale.US : authorizedUser.getLocale();
     }
 }

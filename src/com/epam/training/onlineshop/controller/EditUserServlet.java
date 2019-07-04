@@ -1,5 +1,6 @@
 package com.epam.training.onlineshop.controller;
 
+import com.epam.training.onlineshop.configuration.MessagesManager;
 import com.epam.training.onlineshop.dao.DAOFactory;
 import com.epam.training.onlineshop.dao.StatementType;
 import com.epam.training.onlineshop.dao.UserDAO;
@@ -16,9 +17,12 @@ import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import static com.epam.training.onlineshop.configuration.Messages.*;
 import static com.epam.training.onlineshop.dao.DAOFactory.MYSQL;
 import static com.epam.training.onlineshop.dao.DAOFactory.getDAOFactory;
 import static com.epam.training.onlineshop.dao.StatementType.*;
@@ -47,14 +51,14 @@ public class EditUserServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession();
-        User authorizedUser = (User) session.getAttribute("User");
+        User authorizedUser = LoginServlet.getAuthorizedUser(request);
+        Locale locale = LoginServlet.getUserLocale(request);
         boolean isNotAdmin = authorizedUser == null || authorizedUser.getGroup() != ADMINISTRATOR;
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
         String json = br.readLine();
 
-        String respJson = handleRequest(json, isNotAdmin);
+        String respJson = handleRequest(json, isNotAdmin, locale);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -70,10 +74,11 @@ public class EditUserServlet extends HttpServlet {
      *
      * @param json       request from the page to the server
      * @param isNotAdmin is the user an admin
+     * @param locale     language for displaying messages to the user
      *
      * @return the server's response to the page
      */
-    private String handleRequest(String json, boolean isNotAdmin) {
+    private String handleRequest(String json, boolean isNotAdmin, Locale locale) {
         Gson gson = new Gson();
         List<User> users = userDAO.findAll();
         User editableUser = null;
@@ -85,10 +90,11 @@ public class EditUserServlet extends HttpServlet {
             UserJsonDataPackage requestJson = gson.fromJson(json, UserJsonDataPackage.class);
             if (requestJson.getTypeOperation() == INSERT) {
                 editableUser = requestJson.getEditableEntity();
+                locale = editableUser.getLocale();
                 boolean isExist = false;
                 for (User user : users) {
                     if (user.equals(editableUser)) {
-                        messageFailed = "The Email " + editableUser.getEmail() + " is already registered in the store!";
+                        messageFailed = editableUser.getEmail() + MessagesManager.getMessage(ALREADY_EXIST, locale);
                         isExist = true;
                     }
                 }
@@ -101,13 +107,13 @@ public class EditUserServlet extends HttpServlet {
                         }
                         boolean isSuccessfully = userDAO.addNew(editableUser);
                         if (isSuccessfully) {
-                            messageSuccess = "New user " + editableUser.getName() + " added successfully!";
+                            messageSuccess = editableUser.getName() + MessagesManager.getMessage(ENTITY_ADDED_SUCCESSFULLY, locale);
                             editableUser = new User("", "", "");
                         } else {
-                            messageFailed = "New user " + editableUser.getName() + " is not added to the database!";
+                            messageFailed = editableUser.getName() + MessagesManager.getMessage(ENTITY_NOT_ADDED, locale);
                         }
                     } else {
-                        messageFailed = "New user " + editableUser.getName() + " is not added, the entered data does not meet the conditions!";
+                        messageFailed = editableUser.getName() + MessagesManager.getMessage(NOT_MEET_CONDITIONS, locale);
                     }
                 }
             } else if (requestJson.getTypeOperation() == SELECT) {
@@ -127,12 +133,12 @@ public class EditUserServlet extends HttpServlet {
                 if (isCorrect) {
                     boolean isSuccessfully = userDAO.update(editableUser);
                     if (isSuccessfully) {
-                        messageSuccess = "User " + editableUser.getName() + " is successfully updated!";
+                        messageSuccess = editableUser.getName() + MessagesManager.getMessage(ENTITY_SUCCESSFULLY_UPDATED, locale);
                     } else {
-                        messageFailed = "User " + editableUser.getName() + " is not updated in the database!";
+                        messageFailed = editableUser.getName() + MessagesManager.getMessage(ENTITY_NOT_UPDATED, locale);
                     }
                 } else {
-                    messageFailed = "User " + editableUser.getName() + " is not updated, the entered data does not meet the conditions!";
+                    messageFailed = editableUser.getName() + MessagesManager.getMessage(NOT_MEET_CONDITIONS, locale);
                 }
             }
         }

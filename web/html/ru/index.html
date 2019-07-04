@@ -1,0 +1,208 @@
+<html dir="ltr" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Онлайн магазин</title>
+    <meta name="description" content="My Store">
+    <script src="/js/common.js"></script>
+    <link rel="stylesheet" href="/css/stylesheet.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css">
+</head>
+<body onload="postServletJSON('/homeServlet')">
+<nav id="top">
+    <div class="container">
+        <div class="pull-left">
+            <ul>
+                <li><i class="fa fa-phone"></i> <span class="hidden-xs hidden-sm hidden-md">+375 (22) 789-43-101</span></li>
+                <li><i class="fa fa-building-o"></i> <span class="hidden-xs hidden-sm hidden-md">246746, пр-кт Октября 48, Гомель</span></li>
+            </ul>
+        </div>
+        <div id="top-links" class="nav pull-right">
+            <ul class="list-inline">
+                <li><i class="fa fa-user"></i> <span class="hidden-xs hidden-sm hidden-md" id="userLogin"><a href="/html/ru/login.html" title="Авторизироваться">Авторизироваться</a></span></li>
+                |
+                <li><i class="fa fa-sign-out"></i> <span class="hidden-xs hidden-sm hidden-md"><a href="/loginServlet" title="Выйти">Выйти</a></span></li>
+                <li><a href="/html/ru/cart.html" title="Корзина покупок"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Корзина покупок</span></a></li>
+                <li><a href="#" title="English" onclick="changeLanguage('en_US')"><img src="/image/en-gb.png" alt="English" title="English"><span class="hidden-xs hidden-sm hidden-md">English</span></a></li>
+                |
+                <li><a href="#" title="Русский" onclick="changeLanguage('ru_RU')"><img src="/image/ru-ru.png" alt="Русский" title="Русский"><span class="hidden-xs hidden-sm hidden-md">Русский</span></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <div id="logo"><h1><a href="/html/ru/index.html">Online Shop</a></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container">
+    <nav id="menu" class="navbar">
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav" id="userMenu">
+                <li><a href="/html/ru/index.html">Домой</a></li>
+                <li><a href="/html/ru/cart.html" title="Корзина покупок">Корзина покупок</a></li>
+                <li><a href="#" title="Информация">Информация</a></li>
+                <li><a href="#" title="Конфиденциальность">Конфиденциальность</a></li>
+            </ul>
+            <ul class="nav navbar-nav" id="adminMenu">
+                <li><a href="/html/ru/index.html">||</a></li>
+                <li class="dropdown"><a href="/html/ru/admin/carts.html" class="dropdown-toggle" data-toggle="dropdown">Корзина</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/carts.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editcart.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/orders.html" class="dropdown-toggle" data-toggle="dropdown">Заказ</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/orders.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editorder.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/orderedproducts.html" class="dropdown-toggle" data-toggle="dropdown">Заказанные товары</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/orderedproducts.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editorderedproduct.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/payments.html" class="dropdown-toggle" data-toggle="dropdown">Оплата</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/payments.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editpayment.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/products.html" class="dropdown-toggle" data-toggle="dropdown">Товар</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/products.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editproduct.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/users.html" class="dropdown-toggle" data-toggle="dropdown">Пользователь</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/users.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/edituser.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div id="common-home" class="container">
+    <div id="messageFailed" class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i>
+        <div id="messageFailedText"></div>
+        <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageFailed')">&times;</button>
+    </div>
+    <div id="messageSuccess" class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i>
+        <div id="messageSuccessText"></div>
+        <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageSuccess')">&times;</button>
+    </div>
+    <div class="row">
+        <div class="banner-static static-home">
+            <div class="inner">
+                <div class="col">
+                    <div class="image">
+                        <img src="/image/img1-home-ru.jpg" alt="img1">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="image">
+                        <img src="/image/img2-home-ru.jpg" alt="img2">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="image">
+                        <img src="/image/img3-home-ru.jpg" alt="img3">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="content" class="col-sm-12">
+            <div class="module-title">
+                <h2>Наши товары</h2>
+                <div class="module-description">
+                    <p>Лучшие продукты по разумным ценам и в широком ассортименте только для наших дорогих покупателей!</p>
+                </div>
+            </div>
+            <div class="row" id="productCatalog"></div>
+            <input type="hidden" name="id" id="user_id" value="-1">
+            <input type="hidden" name="userLanguage" id="userLanguage" value="ru_RU">
+            <div class="policy-block">
+                <div class="inner">
+                    <div class="col ">
+                        <div class="box shipping">
+                            <div class="text">
+                                <h4>Бесплатная Доставка По Всему Миру</h4>
+                                <p>Мы предлагаем бесплатную доставку заказов на сумму свыше $200.00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col ">
+                        <div class="box money">
+                            <div class="text">
+                                <h4>Гарантия Возврата Денег</h4>
+                                <p>Если вы не удовлетворены нашей продукцией, мы вернем стоимость покупки*.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col ">
+                        <div class="box support">
+                            <div class="text">
+                                <h4>Онлайн поддержка 24/7 </h4>
+                                <p>Наша дружная команда поддержки готова помочь вам 24 часа в сутки, семь дней в неделю</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <h5>Информация</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Информация О Доставке</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Конфиденциальность</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Условия гарантии</h5>
+            </div>
+        </div>
+        <hr>
+        <p>Online Shop © 2019</p>
+    </div>
+</footer>
+</body>
+</html>

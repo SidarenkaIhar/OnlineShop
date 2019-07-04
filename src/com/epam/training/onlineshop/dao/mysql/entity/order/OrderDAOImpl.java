@@ -118,6 +118,7 @@ public class OrderDAOImpl extends AbstractDAO<Order> {
             Order newOrder = new Order();
             newOrder.setId(resultSet.getInt("order_id"));
             newOrder.setUserId(resultSet.getInt("user_id"));
+            newOrder.setUserName(resultSet.getString("user_name"));
             newOrder.setAmount(resultSet.getBigDecimal("amount"));
             newOrder.setPaymentId(resultSet.getInt("payment_id"));
             newOrder.setCreationDate(resultSet.getTimestamp("date_added"));

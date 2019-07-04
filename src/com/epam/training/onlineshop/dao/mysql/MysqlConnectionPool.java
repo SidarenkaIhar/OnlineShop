@@ -1,8 +1,11 @@
 package com.epam.training.onlineshop.dao.mysql;
 
+import com.epam.training.onlineshop.controller.HomeServlet;
 import com.epam.training.onlineshop.dao.AbstractDAO;
 import com.epam.training.onlineshop.dao.StatementType;
 import com.epam.training.onlineshop.entity.Entity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -18,6 +21,8 @@ import java.sql.*;
  * @version 0.1 23-Apr-19
  */
 public class MysqlConnectionPool {
+    private final static Logger logger = LogManager.getLogger(MysqlConnectionPool.class);
+
     private static MysqlConnectionPool instance = new MysqlConnectionPool();
 
     public static MysqlConnectionPool getInstance() {
@@ -65,7 +70,7 @@ public class MysqlConnectionPool {
             }
         } catch (SQLException e) {
             // Handling all SQLException
-            System.err.println("Database connection error: " + e);
+            logger.error("Database connection error: " + e);
         } finally {
             // Closing statement and connection
             closeStatement(preparedStatement);
@@ -82,7 +87,7 @@ public class MysqlConnectionPool {
             DataSource ds = (DataSource) envCtx.lookup("jdbc/mysqlConPool");
             connection = ds.getConnection();
         } catch (NamingException | SQLException e) {
-            e.printStackTrace();
+            logger.error("Error loading database connection settings" + e);
         }
         return connection;
     }
@@ -94,7 +99,7 @@ public class MysqlConnectionPool {
                 statement.close();
             }
         } catch (SQLException e) {
-            System.err.println("Error closing statement: " + e);
+            logger.error("Error closing statement: " + e);
         }
 
     }
@@ -106,7 +111,7 @@ public class MysqlConnectionPool {
                 connection.close();
             }
         } catch (SQLException e) {
-            System.err.println("Error closing connection: " + e);
+            logger.error("Error closing connection: " + e);
         }
     }
 }

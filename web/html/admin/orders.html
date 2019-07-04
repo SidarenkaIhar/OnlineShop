@@ -5,7 +5,6 @@
     <title>List of orders</title>
     <script src="/js/common.js"></script>
     <link rel="stylesheet" href="/css/stylesheet.css" type="text/css">
-    <link rel="stylesheet" href="/css/bootstrap.css" type="text/css">
     <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css">
 </head>
 <body onload="postServletJSON('/showOrdersServlet')">
@@ -109,10 +108,8 @@
                             <thead>
                             <tr>
                                 <td class="text-center"> Select</td>
-                                <td class="text-left"> Order Id</td>
-                                <td class="text-left"> User Id</td>
+                                <td class="text-left"> User Name</td>
                                 <td class="text-left"> Amount</td>
-                                <td class="text-left"> Payment Id</td>
                                 <td class="text-left"> Creation Date</td>
                                 <td class="text-left"> Order Status</td>
                                 <td class="text-left"> Date Status Change</td>
@@ -128,6 +125,7 @@
                         <input type="hidden" name="typeOperation" id="typeOperation" value="SELECT">
                         <input type="hidden" name="entitiesToEdit" id="entitiesToEdit" value="">
                     </form>
+                    <input type="hidden" name="userLanguage" id="userLanguage" value="en_US">
                 </div>
             </div>
         </div>

@@ -5,6 +5,7 @@ import com.epam.training.onlineshop.entity.catalog.Product;
 import com.epam.training.onlineshop.entity.order.ShoppingCart;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Parameterization of data transferred between the page and the server for the products
@@ -26,18 +27,26 @@ public class HomeJsonDataPackage extends JsonDataPackage<Product> {
     /* User's shopping cart */
     private ShoppingCart shoppingCart;
 
-    public HomeJsonDataPackage(String userLogin, boolean showAdminMenu, List<Product> productCatalog, String messageSuccess, String messageFailed) {
+    /* User language */
+    private Locale userLanguage;
+
+    public HomeJsonDataPackage(String userLogin, boolean showAdminMenu, List<Product> productCatalog, String messageSuccess,
+                               String messageFailed, Locale locale) {
         super(null, null, null, messageSuccess, messageFailed, null);
         this.userLogin = userLogin;
         this.showAdminMenu = showAdminMenu;
         this.productCatalog = productCatalog;
+        this.userLanguage = locale;
     }
 
-    public HomeJsonDataPackage(String userLogin, boolean showAdminMenu, List<Product> entitiesToShow, List<String> entitiesToEdit, Product editableEntity, String messageSuccess, String messageFailed, StatementType typeOperation, List<Product> productCatalog) {
+    public HomeJsonDataPackage(String userLogin, boolean showAdminMenu, List<Product> entitiesToShow, List<String> entitiesToEdit,
+                               Product editableEntity, String messageSuccess, String messageFailed, StatementType typeOperation,
+                               List<Product> productCatalog, Locale locale) {
         super(entitiesToShow, entitiesToEdit, editableEntity, messageSuccess, messageFailed, typeOperation);
         this.userLogin = userLogin;
         this.showAdminMenu = showAdminMenu;
         this.productCatalog = productCatalog;
+        this.userLanguage = locale;
     }
 
     public String getUserLogin() {
@@ -66,5 +75,13 @@ public class HomeJsonDataPackage extends JsonDataPackage<Product> {
 
     public void setShoppingCart(ShoppingCart shoppingCart) {
         this.shoppingCart = shoppingCart;
+    }
+
+    public Locale getUserLanguage() {
+        return userLanguage;
+    }
+
+    public void setUserLanguage(Locale userLanguage) {
+        this.userLanguage = userLanguage;
     }
 }

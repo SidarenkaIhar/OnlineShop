@@ -26,47 +26,45 @@ function postServletJSON(srvUrl, dataSend) {
  * @param request   the response from the server
  */
 function parseJSON(request) {
-    var req = JSON.parse(request);
-    for (var val in req) {
-        switch (val) {
+    var parsedRequest = JSON.parse(request);
+    for (var key in parsedRequest) {
+        var value = parsedRequest[key];
+        switch (key) {
             case "userLogin":
-                document.getElementById("userLogin").innerHTML = 'Welcome ' + req[val];
+                document.getElementById("userLogin").innerHTML = getLocalizedText('Welcome ', 'Привет ') + value;
                 break;
             case "showAdminMenu":
-                if (req[val] === true) {
+                if (value === true) {
                     document.getElementById("adminMenu").style.display = 'block';
                 }
                 break;
             case "productCatalog":
-                showProductCatalog(req[val]);
+                showProductCatalog(value);
                 break;
             case "entitiesToShow":
-                showEntities(req[val]);
+                showEntities(value);
                 break;
             case "userCart":
-                showEntities(req[val]);
-                break;
-            case "namesProducts":
-                setNamesProducts(req[val]);
+                showEntities(value);
                 break;
             case "editableEntity":
-                editableEntity(req[val]);
+                editableEntity(value);
                 break;
             case "messageSuccess":
             case "messageFailed":
-                showMessage(val, req[val].trim());
+                showMessage(key, value.trim());
                 break;
             case "typeOperation":
-                document.getElementById("typeOperation").value = req[val];
+                document.getElementById("typeOperation").value = value;
                 break;
             case "userGroups":
-                setUserGroups(req[val]);
+                setUserGroups(value);
                 break;
             case "categories":
-                setCategories(req[val]);
+                setCategories(value);
                 break;
             case "orderStatuses":
-                setOrderStatuses(req[val]);
+                setOrderStatuses(value);
                 break;
         }
     }
@@ -85,11 +83,11 @@ function showProductCatalog(products) {
         output += '<div class="product-layout col-lg-3 col-md-3 col-sm-6 col-xs-12"><div class="product-thumb transition">' +
             '<div class="image"><img src="' + image + '" alt="' + prod.name + '" title="' + prod.name + '" class="img-responsive"></div>' +
             '<div class="caption"><h4>' + prod.name + '</h4><p>' + prod.description.substring(0, 200) + '...</p><p class="price">$' + prod.price + '</p></div>' +
-            '<div class="button-group"><button type="button" onclick="addToCart(' + prod.id + ',' + prod.price + ');"><i class="fa fa-shopping-cart"></i> ' +
-            '<span class="hidden-xs hidden-sm hidden-md">Add to Cart</span></button></div></div></div>'
+            '<div class="button-group"><button type="button" onclick="addToCart(' + prod.id + ',\'' + prod.name + '\',' + prod.price + ');"><i class="fa fa-shopping-cart"></i> ' +
+            '<span class="hidden-xs hidden-sm hidden-md">' + getLocalizedText("Add to Cart", "Добавить в корзину") + '</span></button></div></div></div>'
     }
     if (output.length === 0) {
-        output = 'Nothing found on your request.';
+        output = getLocalizedText('Nothing found on your request.', 'Ничего не найдено.');
     }
     document.getElementById("productCatalog").innerHTML = output;
 
@@ -102,43 +100,38 @@ function showProductCatalog(products) {
  */
 function showEntities(entities) {
     var output = '';
-    for (var entity in entities) {
-        var ent = entities[entity];
-        output += '<tr><td class="text-center"><input type="checkbox" name="selected[]" value="' + ent.id + '"/></td>';
-        for (var key in ent) {
-            if (key === "productId") {
-                output += '<td class="text-left" id="entity_' + key + ent[key] + '">';
-            } else {
-                output += '<td class="text-left" id="entity_' + key + '">';
+    for (var ent in entities) {
+        var entity = entities[ent];
+        output += '<tr><td class="text-center"><input type="checkbox" name="selected[]" value="' + entity.id + '"/></td>';
+        for (var key in entity) {
+            var value = entity[key];
+            if (!containId(key)) {
+                if (key === "password") {
+                    value = value.join("");
+                } else if (key === "image") {
+                    value = value === '' ? '/image/noimage.png' : value;
+                    value = '<img src="' + value + '" class="img-responsive admin">';
+                }
+                output += '<td class="text-left">' + value + '</td>';
             }
-            if (key === "password") {
-                output += ent[key].join("");
-            } else {
-                output += ent[key];
-            }
-            output += '</td>';
         }
-        output += '<td class="text-center"><button type="button" data-toggle="tooltip" title="Edit" class="btn btn-primary" ' +
-            'onclick=editEntity("' + ent.id + '")><i class="fa fa-pencil"></i></button></td></tr>';
+        output += '<td class="text-center"><button type="button" data-toggle="tooltip" title="' + getLocalizedText("Edit", "Редактировать") +
+            '" class="btn btn-primary" onclick=editEntity("' + entity.id + '")><i class="fa fa-pencil"></i></button></td></tr>';
     }
     if (output.length === 0) {
-        output = '<tr><td class="text-center" colspan="20">Nothing found on your request.</td></tr>';
+        output = '<tr><td class="text-center" colspan="20">' + getLocalizedText('Nothing found on your request.', 'Ничего не найдено.') + '</td></tr>';
     }
     document.getElementById("allEntitiesList").innerHTML = output;
 }
 
 /**
- * Displays the names of products in the shopping cart
+ * Checks the string for the content of the word "ID"
  *
- * @param products  product names to display
+ * @param string    string to check
+ * @returns {boolean}   returns true if the string contains the word "ID"
  */
-function setNamesProducts(products) {
-    for (var product in products) {
-        var productId = document.getElementById('entity_productId' + products[product].id);
-        if (productId) {
-            productId.innerHTML = products[product].name;
-        }
-    }
+function containId(string) {
+    return string.toUpperCase().includes("ID", string.length - 2);
 }
 
 /**
@@ -190,16 +183,17 @@ function setOrderStatuses(statuses) {
  */
 function editableEntity(entity) {
     for (var field in entity) {
-        document.getElementById('entity_' + field).value = entity[field];
+        var value = entity[field];
+        document.getElementById('entity_' + field).value = value;
         switch (field) {
             case "id":
-                if (entity[field] > 0) {
-                    document.getElementById("welcome_message").innerHTML = "Edit entity №" + entity[field];
+                if (value > 0) {
+                    document.getElementById("welcome_message").innerHTML = getLocalizedText("Edit entity #", "Редактирование элемента №") + value;
                 }
                 break;
             case "password":
-                document.getElementById("entity_password").value = entity[field].join("");
-                document.getElementById("entity_confirm").value = entity[field].join("");
+                document.getElementById("entity_password").value = value.join("");
+                document.getElementById("entity_confirm").value = value.join("");
                 break;
         }
     }
@@ -327,6 +321,7 @@ function getAllUrlParams(url) {
  * Get entity from database for editing
  *
  * @param entityId    entity id
+ * @param servlet   servlet url
  */
 function getEntityToEdit(entityId, servlet) {
     var entity = [entityId];
@@ -336,6 +331,7 @@ function getEntityToEdit(entityId, servlet) {
 
 /**
  * Save entity data to the database
+ * @param servlet   servlet url
  */
 function saveEntity(servlet) {
     var entity = {};
@@ -371,11 +367,45 @@ function saveEntity(servlet) {
  * Adds products from the catalog to the shopping cart
  *
  * @param productId     product id to add
+ * @param productName   product name
  * @param productPrice  product price to add
  */
-function addToCart(productId, productPrice) {
+function addToCart(productId, productName, productPrice) {
     var userId = document.getElementById("user_id").value;
-    var cart = {"userId": userId, "productId": productId, "productPrice": productPrice, "productQuantity": 1};
+    var cart = {"userId": userId, "productName": productName, "productId": productId, "productPrice": productPrice, "productQuantity": 1};
     var shoppingCart = {"shoppingCart": cart, "typeOperation": "INSERT"};
     postServletJSON('/homeServlet', shoppingCart);
+}
+
+/**
+ * Returns text based on the user's language
+ *
+ * @param enText    English text
+ * @param ruText    Russian text
+ * @returns {*}     text based on the user's language
+ */
+function getLocalizedText(enText, ruText) {
+    var userLanguage = document.getElementById("userLanguage").value;
+    if (userLanguage) {
+        return userLanguage === "ru_RU" ? ruText : enText;
+    }
+    return enText;
+}
+
+/**
+ * Changes the user language to the specified language
+ *
+ * @param language  target language
+ */
+function changeLanguage(language) {
+    var currentLanguage = document.getElementById("userLanguage").value;
+    if (language !== currentLanguage) {
+        var userLanguage = {"userLanguage": language, "typeOperation": "UPDATE"};
+        postServletJSON('/homeServlet', userLanguage);
+        if (language === "en_US") {
+            window.location.href = '/';
+        } else {
+            window.location.href = '/html/ru/index.html';
+        }
+    }
 }

@@ -116,7 +116,9 @@ public class ShoppingCartDAOImpl extends AbstractDAO<ShoppingCart> {
             ShoppingCart newShoppingCart = new ShoppingCart();
             newShoppingCart.setId(resultSet.getInt("cart_id"));
             newShoppingCart.setUserId(resultSet.getInt("user_id"));
+            newShoppingCart.setUserName(resultSet.getString("user_name"));
             newShoppingCart.setProductId(resultSet.getInt("product_id"));
+            newShoppingCart.setProductName(resultSet.getString("product_name"));
             newShoppingCart.setProductPrice(resultSet.getBigDecimal("price"));
             newShoppingCart.setProductQuantity(resultSet.getInt("quantity"));
             carts.add(newShoppingCart);

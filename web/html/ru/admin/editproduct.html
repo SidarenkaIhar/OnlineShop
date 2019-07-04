@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Редактировать параметры товара</title>
+    <script src="/js/common.js"></script>
+    <script src="/js/validator.js"></script>
+    <link rel="stylesheet" href="/css/stylesheet.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css">
+</head>
+<body onload="applyingParameters('/editProductServlet')">
+<div class="container">
+    <nav id="menu" class="navbar">
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav" id="userMenu">
+                <li><a href="/html/ru/index.html">Домой</a></li>
+                <li class="dropdown"><a href="/html/ru/admin/carts.html" class="dropdown-toggle" data-toggle="dropdown">Корзина</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/carts.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editcart.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/orders.html" class="dropdown-toggle" data-toggle="dropdown">Заказ</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/orders.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editorder.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/orderedproducts.html" class="dropdown-toggle" data-toggle="dropdown">Заказанные товары</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/orderedproducts.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editorderedproduct.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/payments.html" class="dropdown-toggle" data-toggle="dropdown">Оплата</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/payments.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editpayment.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/products.html" class="dropdown-toggle" data-toggle="dropdown">Товар</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/products.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/editproduct.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown"><a href="/html/ru/admin/users.html" class="dropdown-toggle" data-toggle="dropdown">Пользователь</a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-inner">
+                            <ul class="list-unstyled">
+                                <li><a href="/html/ru/admin/users.html">Показать все</a></li>
+                                <li><a href="/html/ru/admin/edituser.html">Добавить новый</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div id="container">
+    <div id="content">
+        <div class="page-header">
+            <div class="container-fluid">
+                <div class="pull-right">
+                    <a href="/html/ru/index.html" data-toggle="tooltip" title="Домой" class="btn btn-primary"><i class="fa fa-home"></i></a>
+                    <button type="button" data-toggle="tooltip" title="Сохранить" class="btn btn-primary" onclick="saveEntity('/editProductServlet')"><i class="fa fa-save"></i></button>
+                    <a href="/html/ru/admin/editproduct.html" data-toggle="tooltip" title="Добавить новый товар" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                    <a href="/html/ru/admin/products.html" data-toggle="tooltip" title="Назад" class="btn btn-default"><i class="fa fa-reply"></i></a>
+                </div>
+                <h1 id="welcome_message">Добавить новый товар</h1>
+            </div>
+        </div>
+        <div id="messageFailed" class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i>
+            <div id="messageFailedText"></div>
+            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageFailed')">&times;</button>
+        </div>
+        <div id="messageSuccess" class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i>
+            <div id="messageSuccessText"></div>
+            <button type="button" class="close" data-dismiss="alert" onclick="hideMessage('messageSuccess')">&times;</button>
+        </div>
+        <div class="container-fluid">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-pencil"></i>Параметры товара</h3>
+                </div>
+                <div class="panel-body">
+                    <form id="form-entity" class="form-horizontal">
+                        <div class="col-sm-10">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab-product">
+                                    <fieldset>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">Имя товара</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="string" value="" placeholder="Имя товара" id="entity_name" class="form-control" maxlength="128"/>
+                                                <div id="entity_name_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Описание</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="description" value="" placeholder="Описание" id="entity_description" class="form-control"/>
+                                                <div id="entity_description_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">Производитель</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="string" value="" placeholder="Производитель" id="entity_manufacturer" class="form-control" maxlength="128"/>
+                                                <div id="entity_manufacturer_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">Категория</label>
+                                            <div class="col-sm-10">
+                                                <div id="categories"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">Цена</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="float" value="" placeholder="Цена" id="entity_price" class="form-control" maxlength="15"/>
+                                                <div id="entity_price_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label class="col-sm-2 control-label">Количество</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="integer" value="" placeholder="Количество" id="entity_quantity" class="form-control" maxlength="10"/>
+                                                <div id="entity_quantity_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Изображение</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="url" value="" placeholder="Изображение" id="entity_image" class="form-control" maxlength="128"/>
+                                                <div id="entity_image_error" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label" for="entity_isEnabled">Статус</label>
+                                            <div class="col-sm-10">
+                                                <select name="isEnabled" id="entity_isEnabled" class="form-control">
+                                                    <option id="statusEnabled" value="true">Включен</option>
+                                                    <option id="statusDisabled" value="false">Выключен</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="id" id="entity_id" value="-1">
+                        <input type="hidden" name="categoryName" id="entity_categoryName" value="">
+                        <input type="hidden" name="creationDate" id="entity_creationDate" value="Jan 1, 2000 5:55:55 PM">
+                        <input type="hidden" name="sortOrder" id="entity_sortOrder" value="0">
+                    </form>
+                    <input type="hidden" name="typeOperation" id="typeOperation" value="">
+                    <input type="hidden" name="entitiesToEdit" id="entitiesToEdit" value="">
+                    <input type="hidden" name="userLanguage" id="userLanguage" value="ru_RU">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

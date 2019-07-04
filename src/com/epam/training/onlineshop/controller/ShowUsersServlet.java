@@ -1,5 +1,6 @@
 package com.epam.training.onlineshop.controller;
 
+import com.epam.training.onlineshop.configuration.MessagesManager;
 import com.epam.training.onlineshop.dao.DAOFactory;
 import com.epam.training.onlineshop.dao.UserDAO;
 import com.epam.training.onlineshop.entity.user.User;
@@ -16,8 +17,11 @@ import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Locale;
 
+import static com.epam.training.onlineshop.configuration.Messages.*;
 import static com.epam.training.onlineshop.dao.DAOFactory.MYSQL;
 import static com.epam.training.onlineshop.dao.DAOFactory.getDAOFactory;
 import static com.epam.training.onlineshop.dao.StatementType.SELECT;
@@ -40,19 +44,11 @@ public class ShowUsersServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        handleRequest(request, response);
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.sendRedirect("/html/admin/users.html");
-    }
-
-    private void handleRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession();
-        User authorizedUser = (User) session.getAttribute("User");
+        User authorizedUser = LoginServlet.getAuthorizedUser(request);
+        Locale locale = LoginServlet.getUserLocale(request);
 
         List<User> users = userDAO.findAll();
-        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
         Gson gson = new Gson();
         String messageSuccess = "";
         String messageFailed = "";
@@ -69,13 +65,13 @@ public class ShowUsersServlet extends HttpServlet {
                     for (User user : users) {
                         if (validator.getNumber(userId, -1) == user.getId()) {
                             if (authorizedUser != null && authorizedUser.getId() == user.getId()) {
-                                failed.append("You cannot delete yourself from the database! <br>");
+                                failed.append(MessagesManager.getMessage(CANNOT_DELETE_YOURSELF, locale));
                             } else {
                                 boolean isSuccessfully = userDAO.delete(user);
                                 if (isSuccessfully) {
-                                    success.append("User ").append(user.getName()).append(", № ").append(user.getId()).append(" is successfully deleted. <br>");
+                                    success.append(user.getName()).append(MessagesManager.getMessage(ENTITY_SUCCESSFULLY_DELETED, locale));
                                 } else {
-                                    failed.append("User ").append(user.getName()).append(", № ").append(user.getId()).append(" was not deleted. <br>");
+                                    failed.append(user.getName()).append(MessagesManager.getMessage(ENTITY_NOT_DELETED, locale));
                                 }
                             }
                         }
@@ -84,7 +80,7 @@ public class ShowUsersServlet extends HttpServlet {
                 messageSuccess = success.length() > 0 ? success.toString() : "";
                 messageFailed = failed.length() > 0 ? failed.toString() : "";
             } else {
-                messageFailed = "You must select at least one user!";
+                messageFailed = MessagesManager.getMessage(NOTHING_SELECTED_TO_DELETE, locale);
             }
         }
         users = userDAO.findAll();
@@ -95,5 +91,9 @@ public class ShowUsersServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(respJson);
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.sendRedirect("/html/admin/users.html");
     }
 }

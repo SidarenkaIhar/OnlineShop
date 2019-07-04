@@ -1,26 +1,34 @@
 package com.epam.training.onlineshop.controller;
 
+import com.epam.training.onlineshop.configuration.MessagesManager;
 import com.epam.training.onlineshop.dao.AbstractDAO;
 import com.epam.training.onlineshop.dao.DAOFactory;
+import com.epam.training.onlineshop.dao.UserDAO;
 import com.epam.training.onlineshop.entity.catalog.Product;
 import com.epam.training.onlineshop.entity.order.ShoppingCart;
 import com.epam.training.onlineshop.entity.user.User;
 import com.epam.training.onlineshop.utils.json.HomeJsonDataPackage;
 import com.google.gson.Gson;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Locale;
 
+
+import static com.epam.training.onlineshop.configuration.Messages.*;
 import static com.epam.training.onlineshop.dao.DAOFactory.MYSQL;
 import static com.epam.training.onlineshop.dao.DAOFactory.getDAOFactory;
 import static com.epam.training.onlineshop.dao.StatementType.INSERT;
+import static com.epam.training.onlineshop.dao.StatementType.UPDATE;
 import static com.epam.training.onlineshop.entity.user.UserGroup.ADMINISTRATOR;
 
 /**
@@ -38,21 +46,24 @@ public class HomeServlet extends HttpServlet {
     /* Working with shopping carts in database */
     private AbstractDAO<ShoppingCart> cartDAO;
 
+    /* Working with users in database */
+    private UserDAO userDAO;
+
     public void init() {
         DAOFactory mysqlFactory = getDAOFactory(MYSQL);
         productDAO = mysqlFactory.getProductDAO();
         cartDAO = mysqlFactory.getShoppingCartDAO();
+        userDAO = mysqlFactory.getUserDAO();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession();
-        User authorizedUser = (User) session.getAttribute("User");
+        User authorizedUser = LoginServlet.getAuthorizedUser(request);
+        Locale locale = LoginServlet.getUserLocale(request);
         String userLogin = authorizedUser == null ? null : authorizedUser.getName();
-        boolean showAdminMenu = authorizedUser != null && authorizedUser.getGroup() == ADMINISTRATOR;
-        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
         String json = br.readLine();
 
-        String respJson = handleRequest(json, authorizedUser, userLogin, showAdminMenu);
+        String respJson = handleRequest(json, authorizedUser, userLogin, locale);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -69,11 +80,11 @@ public class HomeServlet extends HttpServlet {
      * @param json           request from the page to the server
      * @param authorizedUser authorized store user
      * @param userLogin      user login
-     * @param showAdminMenu  whether to display admin menu
      *
      * @return the server's response to the page
      */
-    private String handleRequest(String json, User authorizedUser, String userLogin, boolean showAdminMenu) {
+    private String handleRequest(String json, User authorizedUser, String userLogin, Locale locale) {
+        boolean showAdminMenu = authorizedUser != null && authorizedUser.getGroup() == ADMINISTRATOR;
         List<Product> products = productDAO.findAll();
         List<ShoppingCart> carts = cartDAO.findAll();
         Gson gson = new Gson();
@@ -82,10 +93,10 @@ public class HomeServlet extends HttpServlet {
 
         if (json != null) {
             HomeJsonDataPackage requestJson = gson.fromJson(json, HomeJsonDataPackage.class);
-            if (requestJson.getTypeOperation() == INSERT) {
-                if (authorizedUser == null) {
-                    messageFailed = "You need to login to purchase products in the store!";
-                } else {
+            if (authorizedUser == null) {
+                messageFailed = MessagesManager.getMessage(NEED_TO_LOGIN, locale);
+            } else {
+                if (requestJson.getTypeOperation() == INSERT) {
                     ShoppingCart shoppingCart = requestJson.getShoppingCart();
                     shoppingCart.setUserId(authorizedUser.getId());
                     boolean isExist = false;
@@ -102,33 +113,22 @@ public class HomeServlet extends HttpServlet {
                         isSuccessfully = cartDAO.addNew(shoppingCart);
                     }
                     if (isSuccessfully) {
-                        messageSuccess = "New product " + getProductNameById(products, shoppingCart.getProductId()) + " added to you shopping cart successfully!";
+                        messageSuccess = shoppingCart.getProductName() + MessagesManager.getMessage(ADDED_TO_CART, locale);
                     } else {
-                        messageFailed = "New product " + getProductNameById(products, shoppingCart.getProductId()) + " is not added to you shopping cart!";
+                        messageFailed = shoppingCart.getProductName() + MessagesManager.getMessage(NOT_ADDED_TO_CART, locale);
+                    }
+                } else if (requestJson.getTypeOperation() == UPDATE) {
+                    locale = requestJson.getUserLanguage();
+                    if (!authorizedUser.getLocale().equals(locale)) {
+                        authorizedUser.setLocale(locale);
+                        userDAO.update(authorizedUser);
                     }
                 }
             }
         }
 
-        HomeJsonDataPackage responseJson = new HomeJsonDataPackage(userLogin, showAdminMenu, products, messageSuccess, messageFailed);
+        HomeJsonDataPackage responseJson = new HomeJsonDataPackage(userLogin, showAdminMenu, products, messageSuccess, messageFailed, locale);
 
         return gson.toJson(responseJson);
-    }
-
-    /**
-     * Returns the name of the product by its ID
-     *
-     * @param products all products of the online store
-     * @param id       the product ID
-     *
-     * @return name of the product
-     */
-    private String getProductNameById(List<Product> products, int id) {
-        for (Product product : products) {
-            if (product.getId() == id) {
-                return product.getName();
-            }
-        }
-        return "";
     }
 }

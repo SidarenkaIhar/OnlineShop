@@ -1,0 +1,104 @@
+<html dir="ltr" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Авторизация</title>
+    <meta name="description" content="My Store">
+    <link rel="stylesheet" href="/css/stylesheet.css" type="text/css">
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css">
+</head>
+<body>
+<nav id="top">
+    <div class="container">
+        <div class="pull-left">
+            <ul>
+                <li><i class="fa fa-phone"></i> <span class="hidden-xs hidden-sm hidden-md">+375 (22) 789-43-101</span></li>
+                <li><i class="fa fa-building-o"></i> <span class="hidden-xs hidden-sm hidden-md">246746, пр-кт Октября 48, Гомель</span></li>
+            </ul>
+        </div>
+        <div id="top-links" class="nav pull-right">
+            <ul class="list-inline">
+                <li><a href="/html/ru/cart.html" title="Корзина покупок"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Корзина покупок</span></a></li>
+                <li><a href="/html/login.html" title="English"><img src="/image/en-gb.png" alt="English" title="English"><span class="hidden-xs hidden-sm hidden-md">English</span></a></li>
+                |
+                <li><a href="/html/ru/login.html" title="Русский"><img src="/image/ru-ru.png" alt="Русский" title="Русский"><span class="hidden-xs hidden-sm hidden-md">Русский</span></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <div id="logo"><h1><a href="/html/ru/index.html">Online Shop</a></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container">
+    <nav id="menu" class="navbar">
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav" id="userMenu">
+                <li><a href="/html/ru/index.html">Домой</a></li>
+                <li><a href="/html/ru/cart.html" title="Корзина покупок">Корзина покупок</a></li>
+                <li><a href="#" title="Информация">Информация</a></li>
+                <li><a href="#" title="Конфиденциальность">Конфиденциальность</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div id="common-home" class="container">
+    <div class="row">
+        <div id="content" class="col-sm-12">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="well">
+                        <h2>Новый пользователь</h2>
+                        <p><strong>Регистрация нового пользователя</strong></p>
+                        <p>Создав учетную запись, вы сможете совершать покупки быстрее, быть в курсе статуса заказа, а также отслеживать заказы, сделанные ранее.</p>
+                        <a href="/html/ru/newuser.html" class="btn btn-primary">Создать аккаунт</a></div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="well">
+                        <h2>Зарегистрированный пользоватеть</h2>
+                        <p><strong>Если у вас уже есть аккаунт, заполните форму ниже для авторизации</strong></p>
+                        <form action="/loginServlet" method="post">
+                            <div class="form-group">
+                                <label class="control-label" for="user_email">E-Mail адрес</label>
+                                <input type="text" name="user_email" value="" placeholder="E-Mail" id="user_email" class="form-control" maxlength="128"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="user_password">Пароль</label>
+                                <input type="password" name="user_password" value="" placeholder="Пароль" id="user_password" class="form-control" maxlength="128"/>
+                                <input type="submit" value="Авторизироваться" class="btn btn-primary">
+                            </div>
+                            <input type="hidden" name="userLanguage" id="userLanguage" value="ru_RU">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <h5>Информация</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Информация О Доставке</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Конфиденциальность</h5>
+            </div>
+            <div class="col-sm-3">
+                <h5>Условия гарантии</h5>
+            </div>
+        </div>
+        <hr>
+        <p>Online Shop © 2019</p>
+    </div>
+</footer>
+</body>
+</html>

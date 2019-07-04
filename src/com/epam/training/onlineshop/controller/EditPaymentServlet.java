@@ -1,5 +1,6 @@
 package com.epam.training.onlineshop.controller;
 
+import com.epam.training.onlineshop.configuration.MessagesManager;
 import com.epam.training.onlineshop.dao.AbstractDAO;
 import com.epam.training.onlineshop.dao.DAOFactory;
 import com.epam.training.onlineshop.dao.StatementType;
@@ -17,14 +18,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import static com.epam.training.onlineshop.configuration.Messages.*;
 import static com.epam.training.onlineshop.dao.DAOFactory.MYSQL;
 import static com.epam.training.onlineshop.dao.DAOFactory.getDAOFactory;
 import static com.epam.training.onlineshop.dao.StatementType.*;
@@ -63,13 +66,13 @@ public class EditPaymentServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession();
-        User authorizedUser = (User) session.getAttribute("User");
+        User authorizedUser = LoginServlet.getAuthorizedUser(request);
+        Locale locale = LoginServlet.getUserLocale(request);
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
         String json = br.readLine();
 
-        String respJson = handleRequest(authorizedUser, json);
+        String respJson = handleRequest(authorizedUser, json, locale);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -85,10 +88,11 @@ public class EditPaymentServlet extends HttpServlet {
      *
      * @param authorizedUser authorized store user
      * @param json           request from the page to the server
+     * @param locale         language for displaying messages to the user
      *
      * @return the server's response to the page
      */
-    private String handleRequest(User authorizedUser, String json) {
+    private String handleRequest(User authorizedUser, String json, Locale locale) {
         Gson gson = new Gson();
         List<Payment> payments = paymentDAO.findAll();
         Payment editablePayment = null;
@@ -103,43 +107,46 @@ public class EditPaymentServlet extends HttpServlet {
                 if (authorizedUser == null || authorizedUser.getGroup() != UserGroup.ADMINISTRATOR) {
                     int userId = authorizedUser == null ? -1 : authorizedUser.getId();
                     if (userId >= 0) {
-                        boolean areProductsPurchased;
-                        editablePayment.setUserId(userId);
-                        BigDecimal totalAmount = getTotalAmount(userId);
-                        if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
-                            int paymentId = getPaymentId(editablePayment);
-                            if (paymentId < 0) {
-                                paymentDAO.addNew(editablePayment);
-                                paymentId = getPaymentId(editablePayment);
-                            }
-                            Order order = new Order(userId, totalAmount, paymentId);
-                            areProductsPurchased = orderDAO.addNew(order);
-                            int orderId = getOrderId(order);
+                        if (authorizedUser.isEnabled()) {
+                            boolean areProductsPurchased;
+                            editablePayment.setUserId(userId);
+                            BigDecimal totalAmount = getTotalAmount(userId);
+                            if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
+                                int paymentId = getPaymentId(editablePayment);
+                                if (paymentId < 0) {
+                                    paymentDAO.addNew(editablePayment);
+                                    paymentId = getPaymentId(editablePayment);
+                                }
+                                Order order = new Order(userId, totalAmount, paymentId);
+                                areProductsPurchased = orderDAO.addNew(order);
+                                int orderId = getOrderId(order);
 
-                            areProductsPurchased &= paymentProducts(userId, orderId);
-                            if (areProductsPurchased) {
-                                messageSuccess = "You have successfully ordered the products in our store, the invoice " +
-                                        "will be billed to the data specified by you";
+                                areProductsPurchased &= paymentProducts(userId, orderId);
+                                if (areProductsPurchased) {
+                                    messageSuccess = MessagesManager.getMessage(ORDERED_SUCCESSFULLY, locale);
+                                } else {
+                                    messageFailed = MessagesManager.getMessage(ORDER_NOT_PROCESSED, locale);
+                                }
                             } else {
-                                messageFailed = "Sorry, the products you ordered have not been processed, please try again!";
+                                messageFailed = MessagesManager.getMessage(NO_ITEMS_IN_CART, locale);
                             }
                         } else {
-                            messageFailed = "There are no items in your shopping cart to pay for!";
+                            messageFailed = MessagesManager.getMessage(BLOCKED, locale);
                         }
                     } else {
-                        messageFailed = "You need to login to purchase products!";
+                        messageFailed = MessagesManager.getMessage(NEED_TO_LOGIN, locale);
                     }
                 } else {
                     if (getPaymentId(editablePayment) >= 0) {
-                        messageFailed = "The payment by " + editablePayment.getFirstName() + " is already exists in the store!";
+                        messageFailed = MessagesManager.getMessage(ALREADY_EXIST, locale);
                     } else {
                         editablePayment.setCreationDate(new Date());
                         boolean isSuccessfully = paymentDAO.addNew(editablePayment);
                         if (isSuccessfully) {
-                            messageSuccess = "New payment by " + editablePayment.getFirstName() + " added successfully!";
+                            messageSuccess = MessagesManager.getMessage(ENTITY_ADDED_SUCCESSFULLY, locale);
                             editablePayment = new Payment("", "", "", "", "", "");
                         } else {
-                            messageFailed = "New payment by " + editablePayment.getFirstName() + " is not added to the database!";
+                            messageFailed = MessagesManager.getMessage(ENTITY_NOT_ADDED, locale);
                         }
                     }
                 }
@@ -158,20 +165,18 @@ public class EditPaymentServlet extends HttpServlet {
                 typeOperation = UPDATE;
                 boolean isSuccessfully = paymentDAO.update(editablePayment);
                 if (isSuccessfully) {
-                    messageSuccess = "The Payment " + editablePayment.getId() + " by " + editablePayment.getFirstName() +
-                            " is successfully updated!";
+                    messageSuccess = MessagesManager.getMessage(ENTITY_SUCCESSFULLY_UPDATED, locale);
                 } else {
-                    messageFailed = "The Payment " + editablePayment.getId() + " by " + editablePayment.getFirstName() +
-                            " is not updated in the database!";
+                    messageFailed = MessagesManager.getMessage(ENTITY_NOT_UPDATED, locale);
                 }
             }
         } else if (authorizedUser == null || authorizedUser.getGroup() != UserGroup.ADMINISTRATOR) {
             int userId = authorizedUser == null ? -1 : authorizedUser.getId();
             BigDecimal totalAmount = getTotalAmount(userId);
             if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
-                messageSuccess = "The total amount of purchased goods is " + totalAmount;
+                messageSuccess = MessagesManager.getMessage(TOTAL_AMOUNT, locale) + totalAmount;
             } else {
-                messageFailed = "There are no items in your shopping cart to pay for!";
+                messageFailed = MessagesManager.getMessage(NO_ITEMS_IN_CART, locale);
             }
         }
 
@@ -245,8 +250,8 @@ public class EditPaymentServlet extends HttpServlet {
         boolean areProductsPurchased = true;
         for (ShoppingCart cart : carts) {
             if (cart.getUserId() == userId) {
-                areProductsPurchased &= orderedProductDAO.addNew(new OrderedProduct(orderId, cart.getProductId(),
-                                                                                    cart.getProductPrice(), cart.getProductQuantity()));
+                OrderedProduct product = new OrderedProduct(orderId, cart.getProductId(), cart.getProductPrice(), cart.getProductQuantity());
+                areProductsPurchased &= orderedProductDAO.addNew(product);
                 areProductsPurchased &= cartDAO.delete(cart);
             }
         }

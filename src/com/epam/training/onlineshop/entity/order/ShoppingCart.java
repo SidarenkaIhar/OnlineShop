@@ -19,8 +19,14 @@ public class ShoppingCart implements Entity {
     /** User ID */
     private int userId;
 
+    /** User name */
+    private String userName;
+
     /** Product ID */
     private int productId;
+
+    /** Product name */
+    private String productName;
 
     /** Product Price */
     private BigDecimal productPrice;
@@ -66,12 +72,28 @@ public class ShoppingCart implements Entity {
         this.userId = userId;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public int getProductId() {
         return productId;
     }
 
     public void setProductId(int productId) {
         this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public BigDecimal getProductPrice() {

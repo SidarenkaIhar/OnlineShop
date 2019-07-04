@@ -147,6 +147,7 @@ public class UserDAOImpl extends UserDAO {
             newUser.setName(resultSet.getString("username"));
             newUser.setPassword(resultSet.getString("password"));
             newUser.setEmail(resultSet.getString("email"));
+            newUser.setLocale(resultSet.getString("locale"));
             newUser.setEnabled(resultSet.getInt("status"));
             newUser.setCreationDate(resultSet.getTimestamp("date_added"));
             users.add(newUser);
@@ -174,8 +175,9 @@ public class UserDAOImpl extends UserDAO {
         preparedStatement.setString(2, user.getName());
         preparedStatement.setString(3, new String(user.getPassword()));
         preparedStatement.setString(4, user.getEmail());
-        preparedStatement.setInt(5, user.isEnabled() ? 1 : 0);
-        preparedStatement.setTimestamp(6, user.getCreationDate());
+        preparedStatement.setString(5, user.getLocale().toString());
+        preparedStatement.setInt(6, user.isEnabled() ? 1 : 0);
+        preparedStatement.setTimestamp(7, user.getCreationDate());
         return preparedStatement.executeUpdate() > 0;
     }
 
@@ -194,7 +196,7 @@ public class UserDAOImpl extends UserDAO {
      */
     @Override
     public boolean executeUpdateRequest(PreparedStatement preparedStatement, User user) throws SQLException {
-        preparedStatement.setInt(7, user.getId());
+        preparedStatement.setInt(8, user.getId());
         return executeInsertRequest(preparedStatement, user);
     }
 

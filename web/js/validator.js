@@ -1,8 +1,9 @@
 /**
  * Checks the user name against the specified pattern
  *
- * @param name  name to check
+ * @param name          name to check
  * @returns {boolean}   returns true if the name matches the pattern and false otherwise
+ * @param elementId     the ID of the item for the error output
  */
 function isNameCorrect(name, elementId) {
     var namePattern = /^[A-Za-z0-9_]{4,128}$/;
@@ -18,9 +19,11 @@ function isNameCorrect(name, elementId) {
 /**
  * Checks the user password against the specified pattern
  *
- * @param password  password to check
- * @param confirm   confirm password
- * @returns {boolean}   returns true if the password matches the pattern and false otherwise
+ * @param password          password to check
+ * @param confirm           confirm password
+ * @returns {boolean}       returns true if the password matches the pattern and false otherwise
+ * @param passwordElementId the ID of the item for the password error output
+ * @param confirmElementId  the ID of the item for the confirm error output
  */
 function isPasswordCorrect(password, confirm, passwordElementId, confirmElementId) {
     var passwordPattern = /((?=.*\d)(?=.*[a-z])(?=.*[A-Z@#$%]).{6,128})/;
@@ -43,8 +46,9 @@ function isPasswordCorrect(password, confirm, passwordElementId, confirmElementI
 /**
  * Checks the user mail against the specified pattern
  *
- * @param mail  mail to check
+ * @param mail          mail to check
  * @returns {boolean}   returns true if the mail matches the pattern and false otherwise
+ * @param elementId     the ID of the item for the mail error output
  */
 function isMailCorrect(mail, elementId) {
     var mailPattern = /^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,128})$/;
@@ -102,11 +106,11 @@ function isFloat(number, elementId) {
  * @returns {boolean}   returns true if the string matches the pattern and false otherwise
  */
 function isString(string, elementId) {
-    var namePattern = /^[A-Za-z0-9 ]{3,128}$/;
+    var namePattern = /^[A-Za-z0-9А-Яа-я ]{3,128}$/;
     var isValid = namePattern.test(string);
     output = '';
     if (!isValid) {
-        output = 'The field must be between 3 and 128 characters and contain only [A-Za-z0-9 ]';
+        output = 'The field must be between 3 and 128 characters and contain only [A-Za-z0-9А-Яа-я ]';
     }
     showError(elementId, output);
     return isValid;

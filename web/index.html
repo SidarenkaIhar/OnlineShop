@@ -5,7 +5,6 @@
     <meta name="description" content="My Store">
     <script src="/js/common.js"></script>
     <link rel="stylesheet" href="/css/stylesheet.css" type="text/css">
-    <link rel="stylesheet" href="/css/bootstrap.css" type="text/css">
     <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css">
 </head>
 <body onload="postServletJSON('/homeServlet')">
@@ -23,6 +22,8 @@
                 |
                 <li><i class="fa fa-sign-out"></i> <span class="hidden-xs hidden-sm hidden-md"><a href="/loginServlet" title="Log Out">Log Out</a></span></li>
                 <li><a href="/html/cart.html" title="Shopping Cart"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Shopping Cart</span></a></li>
+                <li><a href="#" title="English" onclick="changeLanguage('en_US')"><img src="image/en-gb.png" alt="English" title="English"><span class="hidden-xs hidden-sm hidden-md">English</span></a></li>|
+                <li><a href="#" title="Русский" onclick="changeLanguage('ru_RU')"><img src="image/ru-ru.png" alt="Русский" title="Русский"><span class="hidden-xs hidden-sm hidden-md">Русский</span></a></li>
             </ul>
         </div>
     </div>
@@ -150,6 +151,7 @@
             </div>
             <div class="row" id="productCatalog"></div>
             <input type="hidden" name="id" id="user_id" value="-1">
+            <input type="hidden" name="userLanguage" id="userLanguage" value="en_US">
             <div class="policy-block">
                 <div class="inner">
                     <div class="col ">

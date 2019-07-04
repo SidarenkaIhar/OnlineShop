@@ -13,6 +13,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 import static com.epam.training.onlineshop.dao.DAOFactory.MYSQL;
 import static com.epam.training.onlineshop.dao.DAOFactory.getDAOFactory;
@@ -35,16 +37,17 @@ public class EditOrderServlet extends EditServlet<Order> {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Locale locale = LoginServlet.getUserLocale(request);
         Gson gson = new Gson();
         OrderJsonDataPackage requestJson = null;
         Order emptyOrder = new Order(-1, new BigDecimal(0), -1);
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
         String json = br.readLine();
         if (json != null) {
             requestJson = gson.fromJson(json, OrderJsonDataPackage.class);
         }
-        OrderJsonDataPackage responseJson = getResponse(orderDAO, requestJson, emptyOrder, new OrderJsonDataPackage());
+        OrderJsonDataPackage responseJson = getResponse(orderDAO, requestJson, emptyOrder, new OrderJsonDataPackage(), locale);
         String respJson = gson.toJson(responseJson);
 
         response.setContentType("application/json");

@@ -118,8 +118,11 @@ public class OrderedProductDAOImpl extends AbstractDAO<OrderedProduct> {
             newOrderedProduct.setId(resultSet.getInt("ordered_product_id"));
             newOrderedProduct.setOrderId(resultSet.getInt("order_id"));
             newOrderedProduct.setProductId(resultSet.getInt("product_id"));
+            newOrderedProduct.setProductName(resultSet.getString("product_name"));
             newOrderedProduct.setProductPrice(resultSet.getBigDecimal("price"));
             newOrderedProduct.setProductQuantity(resultSet.getInt("quantity"));
+            newOrderedProduct.setUserName(resultSet.getString("user_name"));
+            newOrderedProduct.setCreationDate(resultSet.getTimestamp("order_date_added"));
             products.add(newOrderedProduct);
             successful = true;
         }

@@ -1,5 +1,6 @@
 package com.epam.training.onlineshop.controller;
 
+import com.epam.training.onlineshop.configuration.MessagesManager;
 import com.epam.training.onlineshop.dao.AbstractDAO;
 import com.epam.training.onlineshop.dao.StatementType;
 import com.epam.training.onlineshop.entity.Entity;
@@ -9,7 +10,9 @@ import com.epam.training.onlineshop.utils.json.JsonDataPackage;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import java.util.List;
+import java.util.Locale;
 
+import static com.epam.training.onlineshop.configuration.Messages.*;
 import static com.epam.training.onlineshop.dao.StatementType.*;
 
 /**
@@ -28,11 +31,12 @@ public abstract class EditServlet<T extends Entity> extends HttpServlet {
      * @param requestJson  request from the page to the server
      * @param emptyEntity  empty entity to clear fields on the page
      * @param responseJson the server's response to the page
+     * @param locale       language for displaying messages to the user
      * @param <Q>          response type from the server
      *
      * @return the server's response to the page
      */
-    <Q extends JsonDataPackage<T>> Q getResponse(AbstractDAO<T> entityDAO, Q requestJson, T emptyEntity, Q responseJson) {
+    <Q extends JsonDataPackage<T>> Q getResponse(AbstractDAO<T> entityDAO, Q requestJson, T emptyEntity, Q responseJson, Locale locale) {
         Validator validator = new Validator();
         List<T> entities = entityDAO.findAll();
         T editableEntity = null;
@@ -46,7 +50,7 @@ public abstract class EditServlet<T extends Entity> extends HttpServlet {
                 boolean isExist = false;
                 for (T entity : entities) {
                     if (entity.equals(editableEntity)) {
-                        messageFailed = "The entity is already exists in the store!";
+                        messageFailed = MessagesManager.getMessage(ALREADY_EXIST, locale);
                         isExist = true;
                         break;
                     }
@@ -54,10 +58,10 @@ public abstract class EditServlet<T extends Entity> extends HttpServlet {
                 if (!isExist) {
                     boolean isSuccessfully = entityDAO.addNew(editableEntity);
                     if (isSuccessfully) {
-                        messageSuccess = "New entity #" + editableEntity.getId() + " added successfully!";
+                        messageSuccess = MessagesManager.getMessage(ENTITY_ADDED_SUCCESSFULLY, locale);
                         editableEntity = emptyEntity;
                     } else {
-                        messageFailed = "New entity #" + editableEntity.getId() + " is not added to the database!";
+                        messageFailed = MessagesManager.getMessage(ENTITY_NOT_ADDED, locale);
                     }
                 }
             } else if (requestJson.getTypeOperation() == SELECT) {
@@ -74,10 +78,11 @@ public abstract class EditServlet<T extends Entity> extends HttpServlet {
                 editableEntity = requestJson.getEditableEntity();
                 typeOperation = UPDATE;
                 boolean isSuccessfully = entityDAO.update(editableEntity);
+                String id = "#" + editableEntity.getId();
                 if (isSuccessfully) {
-                    messageSuccess = "The entity #" + editableEntity.getId() + " is successfully updated!";
+                    messageSuccess = id + MessagesManager.getMessage(ENTITY_SUCCESSFULLY_UPDATED, locale);
                 } else {
-                    messageFailed = "The entity #" + editableEntity.getId() + " is not updated in the database!";
+                    messageFailed = id + MessagesManager.getMessage(ENTITY_NOT_UPDATED, locale);
                 }
             }
         }

@@ -3,6 +3,8 @@ package com.epam.training.onlineshop.entity.order;
 import com.epam.training.onlineshop.entity.Entity;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -23,11 +25,20 @@ public class OrderedProduct implements Entity {
     /** Product ID */
     private int productId;
 
+    /** Product name */
+    private String productName;
+
     /** Product Price */
     private BigDecimal productPrice;
 
     /** The number of ordered product */
     private int productQuantity;
+
+    /** Customer name */
+    private String userName;
+
+    /** Customer order creation date */
+    private Timestamp creationDate;
 
     // Description of constructors for the class
     public OrderedProduct() {
@@ -74,6 +85,14 @@ public class OrderedProduct implements Entity {
         this.productId = productId;
     }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
     public BigDecimal getProductPrice() {
         return productPrice;
     }
@@ -88,6 +107,26 @@ public class OrderedProduct implements Entity {
 
     public void setProductQuantity(int productQuantity) {
         this.productQuantity = productQuantity;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = new Timestamp(creationDate.getTime());
     }
 
     /**

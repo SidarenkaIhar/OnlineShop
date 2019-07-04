@@ -12,7 +12,6 @@ import java.util.List;
  * @version 0.1 19-Jun-19
  */
 public class OrderedProductJsonDataPackage extends JsonDataPackage<OrderedProduct> {
-
     public OrderedProductJsonDataPackage() {
     }
 

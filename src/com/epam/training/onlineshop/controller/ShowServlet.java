@@ -1,5 +1,6 @@
 package com.epam.training.onlineshop.controller;
 
+import com.epam.training.onlineshop.configuration.MessagesManager;
 import com.epam.training.onlineshop.dao.AbstractDAO;
 import com.epam.training.onlineshop.entity.Entity;
 import com.epam.training.onlineshop.utils.Validator;
@@ -8,7 +9,9 @@ import com.epam.training.onlineshop.utils.json.JsonDataPackage;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import java.util.List;
+import java.util.Locale;
 
+import static com.epam.training.onlineshop.configuration.Messages.*;
 import static com.epam.training.onlineshop.dao.StatementType.SELECT;
 
 /**
@@ -25,10 +28,11 @@ public abstract class ShowServlet<T extends Entity> extends HttpServlet {
      *
      * @param entityDAO   responsible for working with the entity in the database
      * @param requestJson response from the page to the online store server
+     * @param locale      language for displaying messages to the user
      *
      * @return the server's response to the page
      */
-    JsonDataPackage<T> getResponse(AbstractDAO<T> entityDAO, JsonDataPackage<T> requestJson) {
+    JsonDataPackage<T> getResponse(AbstractDAO<T> entityDAO, JsonDataPackage<T> requestJson, Locale locale) {
         List<T> entities = entityDAO.findAll();
         Validator validator = new Validator();
         String messageSuccess = "";
@@ -42,10 +46,11 @@ public abstract class ShowServlet<T extends Entity> extends HttpServlet {
                     for (T entity : entities) {
                         if (validator.getNumber(entityId, -1) == entity.getId()) {
                             boolean isSuccessfully = entityDAO.delete(entity);
+                            String id = "#" + entity.getId();
                             if (isSuccessfully) {
-                                success.append("Item № ").append(entity.getId()).append(" is successfully deleted. <br>");
+                                success.append(id).append(MessagesManager.getMessage(ENTITY_SUCCESSFULLY_DELETED, locale));
                             } else {
-                                failed.append("Item № ").append(entity.getId()).append(" was not deleted. <br>");
+                                failed.append(id).append(MessagesManager.getMessage(ENTITY_NOT_DELETED, locale));
                             }
                         }
                     }
@@ -53,7 +58,7 @@ public abstract class ShowServlet<T extends Entity> extends HttpServlet {
                 messageSuccess = success.length() > 0 ? success.toString() : "";
                 messageFailed = failed.length() > 0 ? failed.toString() : "";
             } else {
-                messageFailed = "You have not selected any items to delete!";
+                messageFailed = MessagesManager.getMessage(NOTHING_SELECTED_TO_DELETE, locale);
             }
         }
         entities = entityDAO.findAll();
